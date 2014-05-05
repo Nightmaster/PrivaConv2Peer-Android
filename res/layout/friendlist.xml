@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content">
+
+<LinearLayout 
+    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+  >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:padding="15dip"
+        android:text="Friends list"
+        android:textSize="18dip" />
+
+    <Button
+        android:id="@+id/changeProfile"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Profile" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/friends_row"
+        android:layout_width="match_parent"
+        android:layout_height="286dp"
+        android:layout_weight="0.56" >
+    </ListView>
+
+    <Button
+        android:id="@+id/buttonAddFriends"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="AddFriends"
+        android:text="Add Friends" />
+
+</LinearLayout>
+</ScrollView>
