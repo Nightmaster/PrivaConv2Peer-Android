@@ -11,7 +11,7 @@ import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class SignUPActivity extends Activity
 {
-	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail;
+	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName;
 	Button btnCreateAccount;
 
 	LoginDataBaseAdapter loginDataBaseAdapter;
@@ -22,13 +22,14 @@ public class SignUPActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.signup);
 
-		// get Instance of Database Adapter
 		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
 		loginDataBaseAdapter = loginDataBaseAdapter.open();
 
-		// Get Refferences of Views
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);
+		editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
+		editTextLastName = (EditText) findViewById(R.id.editTextLastName);
+
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
 
@@ -38,20 +39,20 @@ public class SignUPActivity extends Activity
 
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-
 				String userName = editTextUserName.getText().toString();
 				String userMail = editTextUserMail.getText().toString();
+
+				String lastName = editTextLastName.getText().toString();
+				String firstName = editTextFirstName.getText().toString();
+
 				String password = editTextPassword.getText().toString();
 				String confirmPassword = editTextConfirmPassword.getText().toString();
 
-				// check if any of the fields are vaccant
 				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
 					return;
 				}
-				// check if both password matches
 				if (!password.equals(confirmPassword))
 				{
 					Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_LONG).show();
@@ -59,12 +60,12 @@ public class SignUPActivity extends Activity
 				}
 				else
 				{
-					// Save the Data in Database
-					loginDataBaseAdapter.insertEntry(userName, password, userMail);
+					loginDataBaseAdapter.insertEntry(userName, password, userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
+
 	}
 
 	@Override

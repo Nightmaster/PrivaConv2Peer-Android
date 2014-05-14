@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import esgi.priva2peer.R;
 
 public class ListActivity extends Activity
@@ -19,15 +20,15 @@ public class ListActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friendlist);
 		Button btnAddFriends, btnchangeProfile;
-		ListView listfriends;
-		TextView pseudo;
+		final ListView listfriends;
+		// TextView pseudo;
 
 		// pseudo = (TextView) findViewById(R.id.pseudo);
 		btnAddFriends = (Button) findViewById(R.id.buttonAddFriends);
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
 		listfriends = (ListView) findViewById(R.id.friends_row);
 
-		String[] listeStrings = {"Albert", "Henri", "Julie", "Mathias", "Marie", "Stéphane"};
+		String[] listeStrings = {"Marie", "Stéphane"};
 
 		listfriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listeStrings));
 
@@ -44,20 +45,20 @@ public class ListActivity extends Activity
 		{
 			public void onClick(View v)
 			{
-
 				Intent add_f_intent = new Intent(getApplicationContext(), ChangeProfile.class);
 				startActivity(add_f_intent);
 			}
 		});
+		listfriends.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				String selectedFromList = (listfriends.getItemAtPosition(position).toString());
 
+				Intent add_f_intent = new Intent(view.getContext(), ChatActivity.class);
+				add_f_intent.putExtra("mytext", selectedFromList);
+				startActivity(add_f_intent);
+			}
+		});
 	}
-
-	/*
-	 * String[] values = new String[] { "Device", "Géo localisation",
-	 * "Accéléromètre", "Navigateur internet", "Dialogues", "Album photos",
-	 * "Connexion réseau", "Gestion des fichiers", "Carnet de contacts" };
-	 * ArrayAdapter<String> adapter = new
-	 * ArrayAdapter<String>(this,android.R.id.list, values);
-	 */
-
 }

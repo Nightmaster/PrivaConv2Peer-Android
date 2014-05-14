@@ -1,17 +1,3 @@
-/*
-
-UDP Messenger by Giacomo Furlan.
-http://giacomofurlan.name
-
-This software is being distributed under the Creative Common's Attribution 3.0 Unported licence (CC BY 3.0)
-http://creativecommons.org/licenses/by/3.0/
-
-You are not allowed to use this source code for pirate purposes.
-
-This software is provided "as-is" and it comes with no warranties.
-
- */
-
 package esgi.priva2peer.communication;
 
 import java.net.InetAddress;

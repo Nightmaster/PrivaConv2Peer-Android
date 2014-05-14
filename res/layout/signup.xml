@@ -10,36 +10,37 @@
         android:hint="User Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <requestFocus />
     </EditText>
     
-      <EditText
+       <EditText
         android:id="@+id/editTextUserMail"
         android:hint="User Mail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <requestFocus />
     </EditText>
 
-    <!--<EditText
-        android:id="@+id/FirstName"
+     <EditText
+        android:id="@+id/editTextFirstName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
         android:ems="10"
-        android:hint="First Name"/>
+        android:hint="First Name">
+        <requestFocus />
+    </EditText>    
 
     <EditText
-        android:id="@+id/LastName"
+        android:id="@+id/editTextLastName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/LastName"
         android:layout_below="@+id/LastName"
         android:ems="10"
-        android:hint="Last Name" />-->
-
+        android:hint="Last Name" >
+        <requestFocus />
+	</EditText>
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="fill_parent"

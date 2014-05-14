@@ -45,7 +45,6 @@ public class Home extends Activity
 		});
 	}
 
-	// Methos to handleClick Event of Sign In Button
 	public void signIn(View V)
 	{
 		final Dialog dialog = new Dialog(Home.this);
@@ -64,22 +63,19 @@ public class Home extends Activity
 
 			public void onClick(View v)
 			{
-				// get The User name and Password
 				String userName = editTextUserName.getText().toString();
 				String password = editTextPassword.getText().toString();
 
-				// fetch the Password form database for respective user name
 				String storedPassword = loginDataBaseAdapter.getSinlgeEntry(userName);
 
-				// check if the Stored password matches with Password entered by
-				// user
 				if (password.equals(storedPassword))
 				{
-					Toast.makeText(Home.this, "Congrats: Login Successfull", Toast.LENGTH_LONG).show();
-					dialog.dismiss();
-
 					Intent list_f_intent = new Intent(getApplicationContext(), ListActivity.class);
 					startActivity(list_f_intent);
+					Toast.makeText(Home.this, "Login Successfull ! Hello" + userName, Toast.LENGTH_LONG).show();
+					System.out.println("Login Successfull ! Hello" + userName);
+					dialog.dismiss();
+
 				}
 				else
 				{

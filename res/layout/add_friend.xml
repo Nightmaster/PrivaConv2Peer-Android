@@ -6,63 +6,45 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AddFriend" >
-
-    <EditText
-        android:id="@+id/AddName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="78dp"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
+    tools:context=".AddFriendDataBase" >
 
     <TextView
         android:id="@+id/LabelAddMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/AddName"
-        android:layout_alignLeft="@+id/AddName"
-        android:layout_marginBottom="57dp"
-        android:text="Add your friend with UserName" />
-
-    <EditText
-        android:id="@+id/AddMail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/LabelAddMail"
-        android:layout_below="@+id/LabelAddMail"
-        android:layout_marginTop="28dp"
-        android:ems="10" />
+        android:hint="Add Friend :"
+        android:layout_marginBottom="57dp"/>
 
     <Button
         android:id="@+id/SearchMail"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/AddName"
-        android:layout_below="@+id/AddName"
-        android:text="Add Name" />
+        android:layout_alignLeft="@+id/pseudo_auto"
+        android:layout_below="@+id/pseudo_auto"
+        android:layout_marginTop="21dp"
+        android:hint="Add Name" />
 
-    <Button
-        android:id="@+id/SearchName"
-        style="?android:attr/buttonStyleSmall"
+    <AutoCompleteTextView
+        android:id="@+id/pseudo_auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/LabelAddMail"
-        android:layout_below="@+id/AddMail"
-        android:text="Add Mail" />
+        android:layout_alignLeft="@+id/userName"
+        android:layout_below="@+id/LabelAddMail"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Email" >
 
-    <TextView
-        android:id="@+id/LabelAddMail"
+        <requestFocus />
+    </AutoCompleteTextView>
+
+    <EditText
+        android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/AddName"
-        android:layout_below="@+id/SearchMail"
-        android:layout_marginTop="34dp"
-        android:text="Add your friend with mail address" />
+        android:layout_above="@+id/pseudo_auto"
+        android:layout_alignLeft="@+id/LabelAddMail"
+        android:ems="10"
+        android:hint="userName" />
 
 </RelativeLayout>
