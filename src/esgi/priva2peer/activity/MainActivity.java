@@ -25,7 +25,7 @@ public class MainActivity extends TabActivity {
 
 		TabSpec friendspec = tabHost.newTabSpec("Friends");
 		friendspec.setIndicator("Friends");
-		Intent friendIntent = new Intent(this, ListActivity.class);
+		Intent friendIntent = new Intent(this, ListFriends.class);
 		friendspec.setContent(friendIntent);
 
 		TabSpec chatspec = tabHost.newTabSpec("Chat");

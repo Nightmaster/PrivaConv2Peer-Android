@@ -1,9 +1,11 @@
 package esgi.priva2peer.activity;
 
+import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,10 @@ public class AddFriend extends Activity
 	Button SearchMail;
 
 	AddFriendDataBase addFriendDataBase;
+
+	ArrayList<String> list = new ArrayList<String>();
+
+	ArrayAdapter<String> adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +52,11 @@ public class AddFriend extends Activity
 				else
 				{
 					addFriendDataBase.insertEntry(userName, Pseudo_auto);
+					EditText edit = (EditText) findViewById(R.id.userName);
+					list.add(edit.getText().toString());
+					edit.setText("");
+					adapter.notifyDataSetChanged();
+
 					Toast.makeText(getApplicationContext(), userName + Pseudo_auto, Toast.LENGTH_LONG).show();
 				}
 			}

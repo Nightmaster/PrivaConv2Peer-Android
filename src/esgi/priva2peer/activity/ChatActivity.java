@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,10 +13,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import esgi.priva2peer.R;
+import esgi.priva2peer.communication.UserSessionManager;
 
 public class ChatActivity extends Activity
 {
+	UserSessionManager session;
 
 	private LinearLayout mMainLayout;
 	private EditText mMessageField;
@@ -26,6 +30,15 @@ public class ChatActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
+
+		session = new UserSessionManager(getApplicationContext());
+		HashMap<String, String> user = session.getUserDetails();
+		String name = user.get(UserSessionManager.KEY_NAME);
+		String email = user.get(UserSessionManager.KEY_EMAIL);
+		String last_n = user.get(UserSessionManager.KEY_FirstName);
+		String first_n = user.get(UserSessionManager.KEY_LastName);
+
+		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
 
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);
@@ -60,9 +73,13 @@ public class ChatActivity extends Activity
 	{
 		super.onRestoreInstanceState(savedInstanceState);
 		mMessages = savedInstanceState.getStringArrayList("messages");
+		session = new UserSessionManager(getApplicationContext());
+		HashMap<String, String> user = session.getUserDetails();
+		String name = user.get(UserSessionManager.KEY_NAME);
+
 		for (String message : mMessages)
 		{
-			addMessage("user : " + message);
+			addMessage(name + " say : " + message);
 		}
 	}
 

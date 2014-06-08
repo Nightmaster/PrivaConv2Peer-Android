@@ -61,7 +61,7 @@ public class LoginDataBaseAdapter
 		return numberOFEntriesDeleted;
 	}
 
-	public String getSinlgeEntry(String userName)
+	public String getPseudo(String userName)
 	{
 		Cursor cursor = db.query("USER", null, " USERNAME=?", new String[] {userName}, null, null, null);
 		if (cursor.getCount() < 1) // UserName Not Exist
@@ -73,6 +73,48 @@ public class LoginDataBaseAdapter
 		String password = cursor.getString(cursor.getColumnIndex("PASSWORD"));
 		cursor.close();
 		return password;
+	}
+
+	public String getMail(String userName)
+	{
+		Cursor cursor = db.query("USER", null, " USERNAME=?", new String[] {userName}, null, null, null);
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return "NOT EXIST";
+		}
+		cursor.moveToFirst();
+		String userMail = cursor.getString(cursor.getColumnIndex("USERMAIL"));
+		cursor.close();
+		return userMail;
+	}
+
+	public String getLastname(String userName)
+	{
+		Cursor cursor = db.query("USER", null, " USERNAME=?", new String[] {userName}, null, null, null);
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return "NOT EXIST";
+		}
+		cursor.moveToFirst();
+		String lastname = cursor.getString(cursor.getColumnIndex("LASTNAME"));
+		cursor.close();
+		return lastname;
+	}
+
+	public String getFirstname(String userName)
+	{
+		Cursor cursor = db.query("USER", null, " USERNAME=?", new String[] {userName}, null, null, null);
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return "NOT EXIST";
+		}
+		cursor.moveToFirst();
+		String firstname = cursor.getString(cursor.getColumnIndex("FIRSTNAME"));
+		cursor.close();
+		return firstname;
 	}
 
 	public void updateEntry(String userName, String password, String userMail, String firstName, String lastName)

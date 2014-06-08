@@ -62,6 +62,7 @@ public class SignUPActivity extends Activity
 				{
 					loginDataBaseAdapter.insertEntry(userName, password, userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
+
 				}
 			}
 		});
