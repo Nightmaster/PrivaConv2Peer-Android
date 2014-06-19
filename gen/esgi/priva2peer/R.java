@@ -31,6 +31,7 @@ public final class R {
         public static final int NickName=0x7f080007;
         public static final int Password=0x7f08000b;
         public static final int SearchMail=0x7f080004;
+        public static final int action_settings=0x7f080022;
         public static final int btnLogout=0x7f080002;
         public static final int buttonAddFriends=0x7f080015;
         public static final int buttonCreateAccount=0x7f080021;
@@ -73,9 +74,11 @@ public final class R {
         public static final int signup=0x7f03000a;
     }
     public static final class menu {
-        public static final int login=0x7f070000;
-        public static final int session=0x7f070001;
-        public static final int sign_u=0x7f070002;
+        public static final int client_activty=0x7f070000;
+        public static final int login=0x7f070001;
+        public static final int server=0x7f070002;
+        public static final int session=0x7f070003;
+        public static final int sign_u=0x7f070004;
     }
     public static final class string {
         public static final int action_settings=0x7f05000a;
@@ -88,6 +91,8 @@ public final class R {
         public static final int lblBtnAdd=0x7f050008;
         public static final int message_hint=0x7f050006;
         public static final int message_prompt=0x7f050003;
+        public static final int title_activity_client_activty=0x7f05000e;
+        public static final int title_activity_server=0x7f05000d;
         public static final int title_activity_session=0x7f05000c;
         public static final int title_activity_sign_up=0x7f050002;
         public static final int txtEmpty=0x7f050009;

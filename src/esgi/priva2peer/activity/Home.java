@@ -1,10 +1,17 @@
 package esgi.priva2peer.activity;
 
-import java.util.HashMap;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +22,7 @@ import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class Home extends Activity
 {
+	final Context context = this;
 
 	UserSessionManager session;
 
@@ -39,22 +47,25 @@ public class Home extends Activity
 
 		session = new UserSessionManager(getApplicationContext());
 
-		HashMap<String, String> user = session.getUserDetails();
-		String name = user.get(UserSessionManager.KEY_NAME);
-		String email = user.get(UserSessionManager.KEY_EMAIL);
-		String last_n = user.get(UserSessionManager.KEY_FirstName);
-		String first_n = user.get(UserSessionManager.KEY_LastName);
-
+		/*
+		 * HashMap<String, String> user = session.getUserDetails(); String name
+		 * = user.get(UserSessionManager.KEY_NAME); String email =
+		 * user.get(UserSessionManager.KEY_EMAIL); String last_n =
+		 * user.get(UserSessionManager.KEY_FirstName); String first_n =
+		 * user.get(UserSessionManager.KEY_LastName);
+		 */
 		// Session value
 
-		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
+		// Toast.makeText(getApplicationContext(), "Pseudo : " + name +
+		// " MAil : " + email + " prenom : " + first_n + " nom : " + last_n,
+		// Toast.LENGTH_LONG).show();
 
 		// Set OnClick Listener on SignUp button
 		btnSignUp.setOnClickListener(new View.OnClickListener()
 		{
+			@Override
 			public void onClick(View v)
 			{
-				// connexion serveur
 
 				Intent intentSignUP = new Intent(getApplicationContext(), SignUPActivity.class);
 				startActivity(intentSignUP);
@@ -64,6 +75,7 @@ public class Home extends Activity
 		btnLogout.setOnClickListener(new View.OnClickListener()
 		{
 
+			@Override
 			public void onClick(View arg0)
 			{
 				session.logoutUser();
@@ -87,6 +99,7 @@ public class Home extends Activity
 		btnSignIn.setOnClickListener(new View.OnClickListener()
 		{
 
+			@Override
 			public void onClick(View v)
 			{
 				String userName = editTextUserName.getText().toString();
@@ -100,17 +113,52 @@ public class Home extends Activity
 				if (password.equals(storedPassword))
 				{
 
+					// TODO envoie requete pour se loguer + session de connexion
+					// serveur + response json
+
+					URL url = null;
+					try
+					{
+						MessageDigest m = MessageDigest.getInstance("MD5");
+						m.reset();
+						m.update(userName.getBytes());
+						byte[] digest = m.digest();
+						BigInteger bigInt = new BigInteger(1, digest);
+						String hashtext = bigInt.toString(16);
+						while (hashtext.length() < 32)
+						{
+							hashtext = "0" + hashtext;
+						}
+
+						String caractere = "@";
+						boolean trouve = (userName.indexOf(caractere) != -1);
+
+						System.out.println("http://54.194.20.131:8080/webAPI/connect?" + "email=" + userName + "&pw=" + hashtext);
+						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/connect?" + "email=" + userName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
+						url = new URL(registrationUrl);
+						URLConnection connection = url.openConnection();
+						HttpURLConnection httpConnection = (HttpURLConnection) connection;
+						int responseCode = httpConnection.getResponseCode();
+						if (responseCode == HttpURLConnection.HTTP_OK)
+						{
+							Log.d("MyApp", "Registration success");
+						}
+						else
+						{
+							Log.w("MyApp", "Registration failed for: " + registrationUrl);
+						}
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+
 					session = new UserSessionManager(getApplicationContext());
-
 					Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
-
 					session.createUserLoginSession(userName, user_mail, firstname, lastname);
-
 					list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(list_f_intent);
-
 					dialog.dismiss();
-
 				}
 				else
 				{

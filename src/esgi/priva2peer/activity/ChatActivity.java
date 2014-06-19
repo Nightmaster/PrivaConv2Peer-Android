@@ -1,14 +1,22 @@
 package esgi.priva2peer.activity;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -79,7 +87,7 @@ public class ChatActivity extends Activity
 
 		for (String message : mMessages)
 		{
-			addMessage(name + " say : " + message);
+			addMessage(name + " says : " + message);
 		}
 	}
 
@@ -87,10 +95,36 @@ public class ChatActivity extends Activity
 	public void addMessageButtonHandler(View clickedButton)
 	{
 		String message = mMessageField.getText().toString();
+		session = new UserSessionManager(getApplicationContext());
+		HashMap<String, String> user = session.getUserDetails();
+		String name = user.get(UserSessionManager.KEY_NAME);
 		if (!message.isEmpty())
 		{
-			mMessages.add("user : " + message);
-			addMessage("user : " + message);
+			mMessages.add(name + " says : " + message);
+			addMessage(name + " says : " + message);
+
+			String dri = "C:\\Users\\Unlucky luke\\Desktop\\user.db";
+			String url = "http://54.194.20.131:8080/";
+			File file = new File(Environment.getExternalStorageDirectory(), dri);
+			try
+			{
+				HttpClient httpclient = new DefaultHttpClient();
+
+				HttpPost httppost = new HttpPost(url);
+
+				InputStreamEntity reqEntity = new InputStreamEntity(new FileInputStream(file), -1);
+				reqEntity.setContentType("binary/octet-stream");
+				reqEntity.setChunked(true); // Send in multiple parts if needed
+				httppost.setEntity(reqEntity);
+				HttpResponse response = httpclient.execute(httppost);
+				// Do something with response...
+				Toast.makeText(getApplicationContext(), " nom : " + response, Toast.LENGTH_LONG).show();
+
+			}
+			catch (Exception e)
+			{
+				// show error
+			}
 		}
 	}
 

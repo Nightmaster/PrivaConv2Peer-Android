@@ -1,7 +1,25 @@
 package esgi.priva2peer.activity;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +52,7 @@ public class SignUPActivity extends Activity
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
 
 		btnCreateAccount = (Button) findViewById(R.id.buttonCreateAccount);
+
 		btnCreateAccount.setOnClickListener(new View.OnClickListener()
 		{
 
@@ -60,13 +79,86 @@ public class SignUPActivity extends Activity
 				}
 				else
 				{
-					loginDataBaseAdapter.insertEntry(userName, password, userMail, firstName, lastName);
+					URL url = null;
+					try
+					{
+						// Hash du pass
+						MessageDigest m = MessageDigest.getInstance("MD5");
+						m.reset();
+						m.update(password.getBytes());
+						byte[] digest = m.digest();
+						BigInteger bigInt = new BigInteger(1, digest);
+						String hashtext = bigInt.toString(16);
+						while (hashtext.length() < 32)
+						{
+							hashtext = "0" + hashtext;
+						}
+
+						Toast.makeText(getApplicationContext(), "http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashtext, Toast.LENGTH_LONG).show();
+						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
+						url = new URL(registrationUrl);
+						URLConnection connection = url.openConnection();
+						HttpURLConnection httpConnection = (HttpURLConnection) connection;
+						int responseCode = httpConnection.getResponseCode();
+						if (responseCode == HttpURLConnection.HTTP_OK)
+						{
+							Log.d("MyApp", "Registration success");
+						}
+						else
+						{
+							Log.w("MyApp", "Registration failed for: " + registrationUrl);
+						}
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+
+					// loginDataBaseAdapter.insertEntry(userName, password,
+					// userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
 
 				}
 			}
 		});
 
+	}
+
+	public String getJSON(String address)
+	{
+		StringBuilder builder = new StringBuilder();
+		HttpClient client = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(address);
+		try
+		{
+			HttpResponse response = client.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200)
+			{
+				HttpEntity entity = response.getEntity();
+				InputStream content = entity.getContent();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null)
+				{
+					builder.append(line);
+				}
+			}
+			else
+			{
+				Log.e(SignUPActivity.class.toString(), "Failed to get JSON object");
+			}
+		}
+		catch (ClientProtocolException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return builder.toString();
 	}
 
 	@Override
