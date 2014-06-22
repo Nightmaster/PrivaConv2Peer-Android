@@ -21,15 +21,18 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class SignUPActivity extends Activity
 {
-	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName;
+	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName, securePassword, confirmSecurePassword;
+	Spinner spinner;
 	Button btnCreateAccount;
 
 	LoginDataBaseAdapter loginDataBaseAdapter;
@@ -50,12 +53,19 @@ public class SignUPActivity extends Activity
 
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
+		securePassword = (EditText) findViewById(R.id.SecurePassword);
+		confirmSecurePassword = (EditText) findViewById(R.id.ConfirmSecurePassword);
+
+		spinner = (Spinner) this.findViewById(R.id.spinner1);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sports, android.R.layout.simple_spinner_item);
+		spinner.setAdapter(adapter);
 
 		btnCreateAccount = (Button) findViewById(R.id.buttonCreateAccount);
 
 		btnCreateAccount.setOnClickListener(new View.OnClickListener()
 		{
 
+			@Override
 			public void onClick(View v)
 			{
 				String userName = editTextUserName.getText().toString();
@@ -67,12 +77,17 @@ public class SignUPActivity extends Activity
 				String password = editTextPassword.getText().toString();
 				String confirmPassword = editTextConfirmPassword.getText().toString();
 
+				String SecurePassword = securePassword.getText().toString();
+				String ConfirmSecurePassword = confirmSecurePassword.getText().toString();
+
+				String spinner_crypt = spinner.getSelectedItem().toString();
+
 				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
 					return;
 				}
-				if (!password.equals(confirmPassword))
+				if (!password.equals(confirmPassword) || !SecurePassword.equals(ConfirmSecurePassword))
 				{
 					Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_LONG).show();
 					return;
@@ -88,14 +103,26 @@ public class SignUPActivity extends Activity
 						m.update(password.getBytes());
 						byte[] digest = m.digest();
 						BigInteger bigInt = new BigInteger(1, digest);
-						String hashtext = bigInt.toString(16);
-						while (hashtext.length() < 32)
+						String hashpass = bigInt.toString(16);
+						while (hashpass.length() < 32)
 						{
-							hashtext = "0" + hashtext;
+							hashpass = "0" + hashpass;
 						}
 
-						Toast.makeText(getApplicationContext(), "http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashtext, Toast.LENGTH_LONG).show();
-						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
+						// Hash du 2em pass
+						MessageDigest k = MessageDigest.getInstance("MD5");
+						k.reset();
+						k.update(SecurePassword.getBytes());
+						byte[] digest_k = k.digest();
+						BigInteger bigInt_k = new BigInteger(1, digest_k);
+						String hash_k = bigInt_k.toString(16);
+						while (hash_k.length() < 32)
+						{
+							hash_k = "0" + hash_k;
+						}
+						Toast.makeText(getApplicationContext(), "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt, Toast.LENGTH_LONG).show();
+						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt, userName, URLEncoder.encode(userName, "UTF-8"));
+						System.out.println("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt);
 						url = new URL(registrationUrl);
 						URLConnection connection = url.openConnection();
 						HttpURLConnection httpConnection = (HttpURLConnection) connection;
@@ -114,8 +141,7 @@ public class SignUPActivity extends Activity
 						ex.printStackTrace();
 					}
 
-					// loginDataBaseAdapter.insertEntry(userName, password,
-					// userMail, firstName, lastName);
+					loginDataBaseAdapter.insertEntry(userName, password, userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
 
 				}

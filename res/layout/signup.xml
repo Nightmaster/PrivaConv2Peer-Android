@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content">
+<LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,7 +12,7 @@
     <EditText
         android:id="@+id/editTextUserName"
         android:hint="User Name"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <requestFocus />
     </EditText>
@@ -16,7 +20,7 @@
        <EditText
         android:id="@+id/editTextUserMail"
         android:hint="User Mail"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <requestFocus />
     </EditText>
@@ -25,8 +29,6 @@
         android:id="@+id/editTextFirstName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:ems="10"
         android:hint="First Name">
         <requestFocus />
     </EditText>    
@@ -56,7 +58,40 @@
         android:hint="ConfirmPassword"
         android:inputType="textPassword" >
     </EditText>
-
+    
+    <EditText
+        android:id="@+id/SecurePassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="SecurePassword"
+        android:inputType="textPassword" >
+        </EditText>
+        
+    <EditText
+        android:id="@+id/ConfirmSecurePassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="SecurePassword"
+        android:ems="10"
+        android:inputType="textPassword" >
+    </EditText>
+    
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Information à prendre en compte pour la longueur de la clé de cryptage:
+					  \n- 1024 : peu sécurisé, mais traitement rapide;
+					  \n- 2048 : bon rapport sécurité / vitesse de traitement;
+					  \n- 4096 : très sécurisé, mais vitesse de traitement plus lente" />
+    
+    <Spinner 
+        android:id="@+id/spinner1" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:entries="@array/sports"> 
+</Spinner> 
+   
     <Button
         android:id="@+id/buttonCreateAccount"
         android:layout_width="fill_parent"
@@ -65,3 +100,4 @@
         android:hint="Create Account" />
 
 </LinearLayout>
+</ScrollView>

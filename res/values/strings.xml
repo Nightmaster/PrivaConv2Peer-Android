@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <string-array name="sports"> 
+        <item value="1024">1024</item> 
+        <item value="2048">2048</item> 
+        <item value="4096">4096</item> 
+    </string-array>
 
     <string name="hello">Hello World, Conf2Peer!</string>
     <string name="app_name">Conf2Peer</string>
@@ -8,7 +14,6 @@
     <string name="font_size_prompt">Font size:</string>
     <string name="add_message_button_label">Add Message</string>
     <string name="message_hint">Your Message</string>
-    <string name="hintTxtItem">Enter an item here ...</string>
     <string name="lblBtnAdd">Add Item</string>
     <string name="txtEmpty">List is empty</string>
     <string name="action_settings">Settings</string>

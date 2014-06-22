@@ -131,10 +131,11 @@ public class Home extends Activity
 						}
 
 						String caractere = "@";
+						String truc;
 						boolean trouve = (userName.indexOf(caractere) != -1);
 
-						System.out.println("http://54.194.20.131:8080/webAPI/connect?" + "email=" + userName + "&pw=" + hashtext);
-						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/connect?" + "email=" + userName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
+						System.out.println("http://54.194.20.131:8080/webAPI/connect?" + "username=" + userName + "&pw=" + hashtext);
+						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/connect?" + "username=" + userName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
 						url = new URL(registrationUrl);
 						URLConnection connection = url.openConnection();
 						HttpURLConnection httpConnection = (HttpURLConnection) connection;
