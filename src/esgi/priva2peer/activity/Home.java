@@ -148,6 +148,7 @@ public class Home extends Activity
 						{
 							Log.w("MyApp", "Registration failed for: " + registrationUrl);
 						}
+
 					}
 					catch (Exception ex)
 					{
