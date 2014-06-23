@@ -99,6 +99,7 @@ public class Home extends Activity
 		btnSignIn.setOnClickListener(new View.OnClickListener()
 		{
 
+			@SuppressWarnings("null")
 			@Override
 			public void onClick(View v)
 			{
@@ -131,11 +132,20 @@ public class Home extends Activity
 						}
 
 						String caractere = "@";
-						String truc;
+						String login = "";
 						boolean trouve = (userName.indexOf(caractere) != -1);
+						if (trouve == true)
+						{
+							login += "usermail=";
+						}
+						else
+						{
+							login += "username=";
+						}
 
-						System.out.println("http://54.194.20.131:8080/webAPI/connect?" + "username=" + userName + "&pw=" + hashtext);
-						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/connect?" + "username=" + userName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
+						Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
+
+						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
 						url = new URL(registrationUrl);
 						URLConnection connection = url.openConnection();
 						HttpURLConnection httpConnection = (HttpURLConnection) connection;
@@ -143,6 +153,11 @@ public class Home extends Activity
 						if (responseCode == HttpURLConnection.HTTP_OK)
 						{
 							Log.d("MyApp", "Registration success");
+							// SessionAdder ader = new SessionAdder();//
+							// (HttpRequest
+							// request,
+							// HttpContext
+							// context)
 						}
 						else
 						{
