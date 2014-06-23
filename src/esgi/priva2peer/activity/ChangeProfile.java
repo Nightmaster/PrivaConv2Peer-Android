@@ -54,6 +54,7 @@ public class ChangeProfile extends Activity
 
 		btnchangedProfile.setOnClickListener(new View.OnClickListener()
 		{
+			@Override
 			public void onClick(View v)
 			{
 				String userName = editTextUserName.getText().toString();
@@ -79,6 +80,8 @@ public class ChangeProfile extends Activity
 				else
 				{
 					// Save the Data in Database
+					// /webAPI/:user/updateInfos
+					//
 					loginDataBaseAdapter.updateEntry(userName, password, userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
 				}

@@ -28,31 +28,31 @@ public final class R {
     }
     public static final class id {
         public static final int ConfirmPassword=0x7f09000a;
-        public static final int ConfirmSecurePassword=0x7f090020;
+        public static final int ConfirmSecurePassword=0x7f090021;
         public static final int FirstName=0x7f090009;
         public static final int LabelAddMail=0x7f090003;
         public static final int LastName=0x7f090008;
         public static final int NickName=0x7f090007;
         public static final int Password=0x7f09000b;
         public static final int SearchMail=0x7f090004;
-        public static final int SecurePassword=0x7f09001f;
-        public static final int action_settings=0x7f090024;
+        public static final int SecurePassword=0x7f090020;
         public static final int btnLogout=0x7f090002;
         public static final int buttonAddFriends=0x7f090013;
-        public static final int buttonCreateAccount=0x7f090023;
+        public static final int buttonCreateAccount=0x7f090024;
         public static final int buttonSignIN=0x7f090014;
-        public static final int buttonSignIn=0x7f090018;
+        public static final int buttonSignIn=0x7f090019;
         public static final int buttonSignUP=0x7f090015;
         public static final int changeProfile=0x7f090011;
+        public static final int content=0x7f090016;
         public static final int editMailAdress=0x7f09000c;
-        public static final int editTextConfirmPassword=0x7f09001e;
-        public static final int editTextFirstName=0x7f09001b;
-        public static final int editTextLastName=0x7f09001c;
-        public static final int editTextPassword=0x7f09001d;
-        public static final int editTextPasswordToLogin=0x7f090017;
-        public static final int editTextUserMail=0x7f09001a;
-        public static final int editTextUserName=0x7f090019;
-        public static final int editTextUserNameToLogin=0x7f090016;
+        public static final int editTextConfirmPassword=0x7f09001f;
+        public static final int editTextFirstName=0x7f09001c;
+        public static final int editTextLastName=0x7f09001d;
+        public static final int editTextPassword=0x7f09001e;
+        public static final int editTextPasswordToLogin=0x7f090018;
+        public static final int editTextUserMail=0x7f09001b;
+        public static final int editTextUserName=0x7f09001a;
+        public static final int editTextUserNameToLogin=0x7f090017;
         public static final int friends_row=0x7f090012;
         public static final int lblEmail=0x7f090001;
         public static final int lblName=0x7f090000;
@@ -60,9 +60,9 @@ public final class R {
         public static final int message_field=0x7f09000f;
         public static final int profile_changed=0x7f09000d;
         public static final int pseudo_auto=0x7f090005;
-        public static final int spinner1=0x7f090022;
+        public static final int spinner1=0x7f090023;
         public static final int text=0x7f090010;
-        public static final int textView1=0x7f090021;
+        public static final int textView1=0x7f090022;
         public static final int userName=0x7f090006;
     }
     public static final class layout {
@@ -78,11 +78,9 @@ public final class R {
         public static final int signup=0x7f030009;
     }
     public static final class menu {
-        public static final int client_activty=0x7f080000;
-        public static final int login=0x7f080001;
-        public static final int server=0x7f080002;
-        public static final int session=0x7f080003;
-        public static final int sign_u=0x7f080004;
+        public static final int login=0x7f080000;
+        public static final int session=0x7f080001;
+        public static final int sign_u=0x7f080002;
     }
     public static final class string {
         public static final int action_forgot_password=0x7f060013;

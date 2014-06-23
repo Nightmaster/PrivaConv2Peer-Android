@@ -13,9 +13,9 @@ import org.apache.http.protocol.HttpContext;
 public class HTTPClients
 {
 
-	private static DefaultHttpClient _defaultClient;
-	private static String session_id;
-	private static HTTPClients _me;
+	public static DefaultHttpClient _defaultClient;
+	public static String session_id;
+	public static HTTPClients _me;
 
 	private HTTPClients()
 	{

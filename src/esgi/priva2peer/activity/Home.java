@@ -1,11 +1,15 @@
 package esgi.priva2peer.activity;
 
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.UserSessionManager;
@@ -25,6 +30,7 @@ public class Home extends Activity
 	final Context context = this;
 
 	UserSessionManager session;
+	TextView content;
 
 	Button btnSignIn, btnSignUp, btnLogout;
 	LoginDataBaseAdapter loginDataBaseAdapter;
@@ -44,21 +50,19 @@ public class Home extends Activity
 		btnSignIn = (Button) findViewById(R.id.buttonSignIN);
 		btnSignUp = (Button) findViewById(R.id.buttonSignUP);
 		btnLogout = (Button) findViewById(R.id.btnLogout);
+		content = (TextView) findViewById(R.id.content);
 
 		session = new UserSessionManager(getApplicationContext());
 
-		/*
-		 * HashMap<String, String> user = session.getUserDetails(); String name
-		 * = user.get(UserSessionManager.KEY_NAME); String email =
-		 * user.get(UserSessionManager.KEY_EMAIL); String last_n =
-		 * user.get(UserSessionManager.KEY_FirstName); String first_n =
-		 * user.get(UserSessionManager.KEY_LastName);
-		 */
+		HashMap<String, String> user = session.getUserDetails();
+		String name = user.get(UserSessionManager.KEY_NAME);
+		String email = user.get(UserSessionManager.KEY_EMAIL);
+		String last_n = user.get(UserSessionManager.KEY_FirstName);
+		String first_n = user.get(UserSessionManager.KEY_LastName);
+
 		// Session value
 
-		// Toast.makeText(getApplicationContext(), "Pseudo : " + name +
-		// " MAil : " + email + " prenom : " + first_n + " nom : " + last_n,
-		// Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), "Pseudo : " + name + "\nMail : " + email + "\nprenom : " + first_n + "\nnom : " + last_n, Toast.LENGTH_LONG).show();
 
 		// Set OnClick Listener on SignUp button
 		btnSignUp.setOnClickListener(new View.OnClickListener()
@@ -99,10 +103,10 @@ public class Home extends Activity
 		btnSignIn.setOnClickListener(new View.OnClickListener()
 		{
 
-			@SuppressWarnings("null")
 			@Override
 			public void onClick(View v)
 			{
+
 				String userName = editTextUserName.getText().toString();
 				String password = editTextPassword.getText().toString();
 
@@ -110,64 +114,67 @@ public class Home extends Activity
 				String user_mail = loginDataBaseAdapter.getMail(userName);
 				String firstname = loginDataBaseAdapter.getFirstname(userName);
 				String lastname = loginDataBaseAdapter.getLastname(userName);
+				try
+				{
+					userName = URLEncoder.encode(userName, "UTF-8");
+					user_mail = URLEncoder.encode(user_mail, "UTF-8");
+					firstname = URLEncoder.encode(firstname, "UTF-8");
+					lastname = URLEncoder.encode(lastname, "UTF-8");
+				}
+				catch (Exception e)
+				{}
 
 				if (password.equals(storedPassword))
 				{
 
-					// TODO envoie requete pour se loguer + session de connexion
-					// serveur + response json
-
-					URL url = null;
+					MessageDigest m = null;
 					try
 					{
-						MessageDigest m = MessageDigest.getInstance("MD5");
-						m.reset();
-						m.update(userName.getBytes());
-						byte[] digest = m.digest();
-						BigInteger bigInt = new BigInteger(1, digest);
-						String hashtext = bigInt.toString(16);
-						while (hashtext.length() < 32)
-						{
-							hashtext = "0" + hashtext;
-						}
+						m = MessageDigest.getInstance("MD5");
+					}
+					catch (NoSuchAlgorithmException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					m.reset();
+					m.update(password.getBytes());
+					byte[] digest = m.digest();
+					BigInteger bigInt = new BigInteger(1, digest);
+					String hashtext = bigInt.toString(16);
+					while (hashtext.length() < 32)
+					{
+						hashtext = "0" + hashtext;
+					}
 
-						String caractere = "@";
-						String login = "";
-						boolean trouve = (userName.indexOf(caractere) != -1);
-						if (trouve == true)
-						{
-							login += "usermail=";
-						}
-						else
-						{
-							login += "username=";
-						}
+					String caractere = "@";
+					String login = "";
+					boolean trouve = (password.indexOf(caractere) != -1);
+					if (trouve == true)
+					{
+						login += "email=";
+					}
+					else
+					{
+						login += "username=";
+					}
 
-						Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
+					Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
 
-						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext, userName, URLEncoder.encode(userName, "UTF-8"));
-						url = new URL(registrationUrl);
-						URLConnection connection = url.openConnection();
-						HttpURLConnection httpConnection = (HttpURLConnection) connection;
-						int responseCode = httpConnection.getResponseCode();
-						if (responseCode == HttpURLConnection.HTTP_OK)
-						{
-							Log.d("MyApp", "Registration success");
-							// SessionAdder ader = new SessionAdder();//
-							// (HttpRequest
-							// request,
-							// HttpContext
-							// context)
-						}
-						else
-						{
-							Log.w("MyApp", "Registration failed for: " + registrationUrl);
-						}
+					HttpClient Client = new DefaultHttpClient();
+					String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext;
+					try
+					{
+						HttpGet httpget = new HttpGet(URL);
+						ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
+						String SetServerString = "";
+						SetServerString = Client.execute(httpget, responseHandler);
+						content.setText(SetServerString);
 					}
 					catch (Exception ex)
 					{
-						ex.printStackTrace();
+						// content.setText("Fail!");
 					}
 
 					session = new UserSessionManager(getApplicationContext());
