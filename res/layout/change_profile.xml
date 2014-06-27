@@ -76,8 +76,30 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ConfirmPassword"
-        android:layout_below="@+id/ConfirmPassword"
-        android:layout_marginTop="30dp"
+        android:layout_alignParentBottom="true"
         android:text="Change Profile" />
+
+    <EditText
+        android:id="@+id/SecurePassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ConfirmPassword"
+        android:layout_below="@+id/ConfirmPassword"
+        android:ems="10"
+        android:hint="SecurePassword"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/ConfirmSecurePassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/SecurePassword"
+        android:layout_below="@+id/SecurePassword"
+        android:ems="10"
+        android:hint="ConfirmSecurePassword"
+        android:inputType="textPassword" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

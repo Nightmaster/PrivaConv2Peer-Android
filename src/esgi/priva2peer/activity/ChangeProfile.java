@@ -1,5 +1,6 @@
 package esgi.priva2peer.activity;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +19,7 @@ public class ChangeProfile extends Activity
 
 	UserSessionManager session;
 
-	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName;
+	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName, SecurePassword, ConfirmSecurePassword;
 	LoginDataBaseAdapter loginDataBaseAdapter;
 
 	@Override
@@ -39,14 +40,13 @@ public class ChangeProfile extends Activity
 
 		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
 		loginDataBaseAdapter = loginDataBaseAdapter.open();
-
-		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);
 		editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
 		editTextLastName = (EditText) findViewById(R.id.editTextLastName);
-
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
+		SecurePassword = (EditText) findViewById(R.id.SecurePassword);
+		ConfirmSecurePassword = (EditText) findViewById(R.id.ConfirmSecurePassword);
 
 		Button btnchangedProfile;
 
@@ -57,7 +57,6 @@ public class ChangeProfile extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				String userName = editTextUserName.getText().toString();
 				String userMail = editTextUserMail.getText().toString();
 
 				String lastName = editTextLastName.getText().toString();
@@ -66,7 +65,23 @@ public class ChangeProfile extends Activity
 				String password = editTextPassword.getText().toString();
 				String confirmPassword = editTextConfirmPassword.getText().toString();
 
-				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
+				String securePassword = SecurePassword.getText().toString();
+				String confirmSecurePassword = ConfirmSecurePassword.getText().toString();
+
+				try
+				{
+					userMail = URLEncoder.encode(userMail, "UTF-8");
+					firstName = URLEncoder.encode(firstName, "UTF-8");
+					lastName = URLEncoder.encode(lastName, "UTF-8");
+					password = URLEncoder.encode(password, "UTF-8");
+					confirmPassword = URLEncoder.encode(confirmPassword, "UTF-8");
+					securePassword = URLEncoder.encode(securePassword, "UTF-8");
+					confirmSecurePassword = URLEncoder.encode(confirmSecurePassword, "UTF-8");
+				}
+				catch (Exception e)
+				{}
+
+				if (password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
 					return;
@@ -82,7 +97,8 @@ public class ChangeProfile extends Activity
 					// Save the Data in Database
 					// /webAPI/:user/updateInfos
 					//
-					loginDataBaseAdapter.updateEntry(userName, password, userMail, firstName, lastName);
+					// loginDataBaseAdapter.updateEntry(userName, password,
+					// userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
 				}
 

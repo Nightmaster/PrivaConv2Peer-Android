@@ -71,7 +71,7 @@ android:layout_height="wrap_content">
         android:id="@+id/ConfirmSecurePassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="SecurePassword"
+        android:hint="ConfirmSecurePassword"
         android:ems="10"
         android:inputType="textPassword" >
     </EditText>

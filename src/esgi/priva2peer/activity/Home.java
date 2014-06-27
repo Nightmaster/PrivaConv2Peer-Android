@@ -1,10 +1,15 @@
 package esgi.priva2peer.activity;
 
 import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -27,7 +32,12 @@ import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class Home extends Activity
 {
+	protected static final String LOGTAG = null;
+
 	final Context context = this;
+
+	private DefaultHttpClient httpClient;
+	public static org.apache.http.cookie.Cookie cookie = null;
 
 	UserSessionManager session;
 	TextView content;
@@ -60,11 +70,28 @@ public class Home extends Activity
 		String last_n = user.get(UserSessionManager.KEY_FirstName);
 		String first_n = user.get(UserSessionManager.KEY_LastName);
 
-		// Session value
-
 		Toast.makeText(getApplicationContext(), "Pseudo : " + name + "\nMail : " + email + "\nprenom : " + first_n + "\nnom : " + last_n, Toast.LENGTH_LONG).show();
 
-		// Set OnClick Listener on SignUp button
+		// final Dialog dialog = new Dialog(context);
+		// dialog.setContentView(R.layout.popup_invite_friends);
+		// dialog.setTitle("New friends?");
+		//
+		// // set the custom dialog components - text, image and button
+		// TextView text = (TextView) dialog.findViewById(R.id.text);
+		// text.setText("Do you know that guy?");
+		// Button dialogButton = (Button)
+		// dialog.findViewById(R.id.dialogButtonOK);
+		// // if button is clicked, close the custom dialog
+		// dialogButton.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v)
+		// {
+		// dialog.dismiss();
+		// }
+		// });
+		// dialog.show();
+
 		btnSignUp.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -78,11 +105,26 @@ public class Home extends Activity
 
 		btnLogout.setOnClickListener(new View.OnClickListener()
 		{
-
 			@Override
 			public void onClick(View arg0)
 			{
 				session.logoutUser();
+				HttpClient Client = new DefaultHttpClient();
+				String URL = "http://54.194.20.131:8080/webAPI/disconnect?";
+				try
+				{
+					HttpGet httpget = new HttpGet(URL);
+					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+					String SetServerString = "";
+					SetServerString = Client.execute(httpget, responseHandler);
+					content.setText(SetServerString);
+				}
+				catch (Exception ex)
+				{
+					// content.setText("Fail!");
+				}
+
 			}
 		});
 
@@ -110,84 +152,95 @@ public class Home extends Activity
 				String userName = editTextUserName.getText().toString();
 				String password = editTextPassword.getText().toString();
 
-				String storedPassword = loginDataBaseAdapter.getPseudo(userName);
-				String user_mail = loginDataBaseAdapter.getMail(userName);
-				String firstname = loginDataBaseAdapter.getFirstname(userName);
-				String lastname = loginDataBaseAdapter.getLastname(userName);
 				try
 				{
 					userName = URLEncoder.encode(userName, "UTF-8");
-					user_mail = URLEncoder.encode(user_mail, "UTF-8");
-					firstname = URLEncoder.encode(firstname, "UTF-8");
-					lastname = URLEncoder.encode(lastname, "UTF-8");
+					password = URLEncoder.encode(password, "UTF-8");
+
 				}
 				catch (Exception e)
 				{}
 
-				if (password.equals(storedPassword))
+				MessageDigest m = null;
+				try
 				{
+					m = MessageDigest.getInstance("MD5");
+				}
+				catch (NoSuchAlgorithmException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				m.reset();
+				m.update(password.getBytes());
+				byte[] digest = m.digest();
+				BigInteger bigInt = new BigInteger(1, digest);
+				String hashtext = bigInt.toString(16);
+				while (hashtext.length() < 32)
+				{
+					hashtext = "0" + hashtext;
+				}
 
-					MessageDigest m = null;
-					try
-					{
-						m = MessageDigest.getInstance("MD5");
-					}
-					catch (NoSuchAlgorithmException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					m.reset();
-					m.update(password.getBytes());
-					byte[] digest = m.digest();
-					BigInteger bigInt = new BigInteger(1, digest);
-					String hashtext = bigInt.toString(16);
-					while (hashtext.length() < 32)
-					{
-						hashtext = "0" + hashtext;
-					}
-
-					String caractere = "@";
-					String login = "";
-					boolean trouve = (password.indexOf(caractere) != -1);
-					if (trouve == true)
-					{
-						login += "email=";
-					}
-					else
-					{
-						login += "username=";
-					}
-
-					Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
-
-					HttpClient Client = new DefaultHttpClient();
-					String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext;
-					try
-					{
-						HttpGet httpget = new HttpGet(URL);
-						ResponseHandler<String> responseHandler = new BasicResponseHandler();
-
-						String SetServerString = "";
-						SetServerString = Client.execute(httpget, responseHandler);
-						content.setText(SetServerString);
-					}
-					catch (Exception ex)
-					{
-						// content.setText("Fail!");
-					}
-
-					session = new UserSessionManager(getApplicationContext());
-					Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
-					session.createUserLoginSession(userName, user_mail, firstname, lastname);
-					list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(list_f_intent);
-					dialog.dismiss();
+				String caractere = "@";
+				String login = "";
+				boolean trouve = editTextPassword.getText().toString().contains(caractere);
+				if (trouve == true)
+				{
+					login += "email=";
 				}
 				else
 				{
-					Toast.makeText(Home.this, "User Name or Password does not match", Toast.LENGTH_LONG).show();
+					login += "username=";
 				}
+
+				Toast.makeText(getApplicationContext(), login + trouve, Toast.LENGTH_LONG).show();
+
+				Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
+
+				HttpClient Client = new DefaultHttpClient();
+				String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext;
+				try
+				{
+					HttpGet httpget = new HttpGet(URL);
+					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+					String SetServerString = "";
+					SetServerString = Client.execute(httpget, responseHandler);
+					content.setText(SetServerString);
+
+					URL url = new URL("http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
+					URLConnection connection = url.openConnection();
+
+					Map responseMap = connection.getHeaderFields();
+					for (Iterator iterator = responseMap.keySet().iterator(); iterator.hasNext();)
+					{
+						String key = (String) iterator.next();
+						Log.d("MyApp", key + " = ");
+
+						List values = (List) responseMap.get(key);
+						for (int i = 0; i < values.size(); i++ )
+						{
+							Object o = values.get(i);
+							Log.d("MyApp", o + ", ");
+
+						}
+						System.out.println("");
+					}
+
+				}
+				catch (Exception ex)
+				{
+					// content.setText("Fail!");
+				}
+
+				session = new UserSessionManager(getApplicationContext());
+				Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
+				// session.createUserLoginSession(userName, user_mail,
+				// firstname, lastname);
+				list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(list_f_intent);
+				dialog.dismiss();
+
 			}
 		});
 

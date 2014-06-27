@@ -12,39 +12,31 @@
         android:id="@+id/LabelAddMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Add Friend :"
-        android:layout_marginBottom="57dp"/>
+        android:layout_marginBottom="57dp"
+        android:hint="Add Friend :" />
+
+    <EditText
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/LabelAddMail"
+        android:ems="10"
+        android:hint="userName" />
 
     <Button
         android:id="@+id/SearchMail"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pseudo_auto"
-        android:layout_below="@+id/pseudo_auto"
-        android:layout_marginTop="21dp"
-        android:hint="Add Name" />
-
-    <AutoCompleteTextView
-        android:id="@+id/pseudo_auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/userName"
         android:layout_below="@+id/LabelAddMail"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Email" >
-
-        <requestFocus />
-    </AutoCompleteTextView>
-
-    <EditText
-        android:id="@+id/userName"
+        android:layout_marginLeft="32dp"
+        android:hint="Add Name" />
+    
+    <TextView
+        android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/pseudo_auto"
-        android:layout_alignLeft="@+id/LabelAddMail"
-        android:ems="10"
-        android:hint="userName" />
+        android:text="TextView" />
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.util.HashMap;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -28,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
+import esgi.priva2peer.data.PasswordUtilities;
 
 public class SignUPActivity extends Activity
 {
@@ -81,7 +83,9 @@ public class SignUPActivity extends Activity
 				String ConfirmSecurePassword = confirmSecurePassword.getText().toString();
 
 				String spinner_crypt = spinner.getSelectedItem().toString();
-
+				PasswordUtilities pass = new PasswordUtilities();
+				HashMap<String, Boolean> value = PasswordUtilities.isStrongEnough(password);
+				Log.d("MyApp", "Registration success" + value);
 				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
@@ -120,7 +124,6 @@ public class SignUPActivity extends Activity
 						{
 							hash_k = "0" + hash_k;
 						}
-						Toast.makeText(getApplicationContext(), "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt, Toast.LENGTH_LONG).show();
 						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt, userName, URLEncoder.encode(userName, "UTF-8"));
 						System.out.println("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt);
 						url = new URL(registrationUrl);

@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -23,6 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
+import esgi.priva2peer.com.pc2p.communication.client.Client;
+import esgi.priva2peer.com.pc2p.communication.message.Message;
+import esgi.priva2peer.com.pc2p.communication.server.Server;
 import esgi.priva2peer.communication.UserSessionManager;
 
 public class ChatActivity extends Activity
@@ -55,6 +59,15 @@ public class ChatActivity extends Activity
 		 * (IOException e) { // TODO Auto-generated catch block
 		 * e.printStackTrace(); }
 		 */
+		try
+		{
+			new Thread(new Server()).start();
+			new Thread(new Client()).start();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 
@@ -88,6 +101,10 @@ public class ChatActivity extends Activity
 		for (String message : mMessages)
 		{
 			addMessage(name + " says : " + message);
+			Message mess = new Message();
+			mess.setMessage(mMessageField.getText());
+			mess.setReceiveDate(new Date());
+			boolean clearArea = true;
 		}
 	}
 
