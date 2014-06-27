@@ -1,20 +1,16 @@
 package esgi.priva2peer.activity;
 
 import java.math.BigInteger;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -37,6 +33,7 @@ public class Home extends Activity
 	final Context context = this;
 
 	private DefaultHttpClient httpClient;
+	private String someVariable;
 	public static org.apache.http.cookie.Cookie cookie = null;
 
 	UserSessionManager session;
@@ -49,7 +46,6 @@ public class Home extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		session = new UserSessionManager(getApplicationContext());
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 
@@ -183,7 +179,7 @@ public class Home extends Activity
 
 				String caractere = "@";
 				String login = "";
-				boolean trouve = editTextPassword.getText().toString().contains(caractere);
+				boolean trouve = editTextUserName.getText().toString().contains(caractere);
 				if (trouve == true)
 				{
 					login += "email=";
@@ -193,39 +189,26 @@ public class Home extends Activity
 					login += "username=";
 				}
 
-				Toast.makeText(getApplicationContext(), login + trouve, Toast.LENGTH_LONG).show();
-
-				Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
+				Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext);
 
 				HttpClient Client = new DefaultHttpClient();
-				String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext;
+
+				String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
 				try
 				{
 					HttpGet httpget = new HttpGet(URL);
+
 					ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
 					String SetServerString = "";
 					SetServerString = Client.execute(httpget, responseHandler);
 					content.setText(SetServerString);
+					Log.d("MyApp", SetServerString);
 
-					URL url = new URL("http://54.194.20.131:8080/webAPI/connect?" + login + userName + "&pw=" + hashtext);
-					URLConnection connection = url.openConnection();
+					JSONObject obj = new JSONObject(SetServerString);
 
-					Map responseMap = connection.getHeaderFields();
-					for (Iterator iterator = responseMap.keySet().iterator(); iterator.hasNext();)
-					{
-						String key = (String) iterator.next();
-						Log.d("MyApp", key + " = ");
-
-						List values = (List) responseMap.get(key);
-						for (int i = 0; i < values.size(); i++ )
-						{
-							Object o = values.get(i);
-							Log.d("MyApp", o + ", ");
-
-						}
-						System.out.println("");
-					}
+					JSONObject user = obj.getJSONObject("user");
+					Log.d("MyApp", user.getString("login"));
 
 				}
 				catch (Exception ex)
@@ -238,7 +221,7 @@ public class Home extends Activity
 				// session.createUserLoginSession(userName, user_mail,
 				// firstname, lastname);
 				list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(list_f_intent);
+				// startActivity(list_f_intent);
 				dialog.dismiss();
 
 			}
