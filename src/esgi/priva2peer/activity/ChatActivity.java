@@ -1,33 +1,23 @@
 package esgi.priva2peer.activity;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.com.pc2p.communication.client.Client;
-import esgi.priva2peer.com.pc2p.communication.message.Message;
-import esgi.priva2peer.com.pc2p.communication.server.Server;
 import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.communication.client.Client;
+import esgi.priva2peer.communication.server.Server;
 
 public class ChatActivity extends Activity
 {
@@ -54,20 +44,9 @@ public class ChatActivity extends Activity
 
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);
-		/*
-		 * Server server = new Server(); server.run(); try { client(); } catch
-		 * (IOException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
-		try
-		{
-			new Thread(new Server()).start();
-			new Thread(new Client()).start();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+
+		new Thread(new Server()).start();
+		new Thread(new Client()).start();
 
 	}
 
@@ -101,11 +80,9 @@ public class ChatActivity extends Activity
 		for (String message : mMessages)
 		{
 			addMessage(name + " says : " + message);
-			Message mess = new Message();
-			mess.setMessage(mMessageField.getText());
-			mess.setReceiveDate(new Date());
-			boolean clearArea = true;
+
 		}
+
 	}
 
 	@SuppressLint("NewApi")
@@ -120,28 +97,6 @@ public class ChatActivity extends Activity
 			mMessages.add(name + " says : " + message);
 			addMessage(name + " says : " + message);
 
-			String dri = "C:\\Users\\Unlucky luke\\Desktop\\user.db";
-			String url = "http://54.194.20.131:8080/";
-			File file = new File(Environment.getExternalStorageDirectory(), dri);
-			try
-			{
-				HttpClient httpclient = new DefaultHttpClient();
-
-				HttpPost httppost = new HttpPost(url);
-
-				InputStreamEntity reqEntity = new InputStreamEntity(new FileInputStream(file), -1);
-				reqEntity.setContentType("binary/octet-stream");
-				reqEntity.setChunked(true); // Send in multiple parts if needed
-				httppost.setEntity(reqEntity);
-				HttpResponse response = httpclient.execute(httppost);
-				// Do something with response...
-				Toast.makeText(getApplicationContext(), " nom : " + response, Toast.LENGTH_LONG).show();
-
-			}
-			catch (Exception e)
-			{
-				// show error
-			}
 		}
 	}
 

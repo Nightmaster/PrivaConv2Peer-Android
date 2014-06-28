@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -57,36 +56,6 @@ public class Home extends Activity
 		btnSignUp = (Button) findViewById(R.id.buttonSignUP);
 		btnLogout = (Button) findViewById(R.id.btnLogout);
 		content = (TextView) findViewById(R.id.content);
-
-		session = new UserSessionManager(getApplicationContext());
-
-		HashMap<String, String> user = session.getUserDetails();
-		String name = user.get(UserSessionManager.KEY_NAME);
-		String email = user.get(UserSessionManager.KEY_EMAIL);
-		String last_n = user.get(UserSessionManager.KEY_FirstName);
-		String first_n = user.get(UserSessionManager.KEY_LastName);
-
-		Toast.makeText(getApplicationContext(), "Pseudo : " + name + "\nMail : " + email + "\nprenom : " + first_n + "\nnom : " + last_n, Toast.LENGTH_LONG).show();
-
-		// final Dialog dialog = new Dialog(context);
-		// dialog.setContentView(R.layout.popup_invite_friends);
-		// dialog.setTitle("New friends?");
-		//
-		// // set the custom dialog components - text, image and button
-		// TextView text = (TextView) dialog.findViewById(R.id.text);
-		// text.setText("Do you know that guy?");
-		// Button dialogButton = (Button)
-		// dialog.findViewById(R.id.dialogButtonOK);
-		// // if button is clicked, close the custom dialog
-		// dialogButton.setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v)
-		// {
-		// dialog.dismiss();
-		// }
-		// });
-		// dialog.show();
 
 		btnSignUp.setOnClickListener(new View.OnClickListener()
 		{
@@ -189,8 +158,6 @@ public class Home extends Activity
 					login += "username=";
 				}
 
-				Log.d("MyApp", "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext);
-
 				HttpClient Client = new DefaultHttpClient();
 
 				String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
@@ -202,26 +169,31 @@ public class Home extends Activity
 
 					String SetServerString = "";
 					SetServerString = Client.execute(httpget, responseHandler);
-					content.setText(SetServerString);
-					Log.d("MyApp", SetServerString);
 
-					JSONObject obj = new JSONObject(SetServerString);
+					JSONObject JSONObject = new JSONObject(SetServerString);
+					String name = JSONObject.get("user").toString();
+					String askFriends = JSONObject.get("askFriends").toString();
+					Boolean connexion = JSONObject.getBoolean("connection");
+					if (connexion == true)
+					{
+						Toast.makeText(getApplicationContext(), "connect to server PrivaConv2Peer", Toast.LENGTH_LONG).show();
+					}
+					content.setText(name);
+					String[] parts = name.split("\"");
+					Log.d("MyApp", askFriends);
 
-					JSONObject user = obj.getJSONObject("user");
-					Log.d("MyApp", user.getString("login"));
-
+					content.setText(name);
+					session = new UserSessionManager(getApplicationContext());
+					session.createUserLoginSession(parts[7], parts[3], parts[11], parts[15]);
 				}
 				catch (Exception ex)
 				{
 					// content.setText("Fail!");
 				}
 
-				session = new UserSessionManager(getApplicationContext());
 				Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
-				// session.createUserLoginSession(userName, user_mail,
-				// firstname, lastname);
 				list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				// startActivity(list_f_intent);
+				startActivity(list_f_intent);
 				dialog.dismiss();
 
 			}
