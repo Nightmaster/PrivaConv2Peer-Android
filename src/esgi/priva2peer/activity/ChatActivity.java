@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.UserSessionManager;
 import esgi.priva2peer.communication.client.Client;
+import esgi.priva2peer.communication.client.ClientInfo;
 import esgi.priva2peer.communication.server.Server;
 
 public class ChatActivity extends Activity
@@ -39,6 +41,9 @@ public class ChatActivity extends Activity
 		String email = user.get(UserSessionManager.KEY_EMAIL);
 		String last_n = user.get(UserSessionManager.KEY_FirstName);
 		String first_n = user.get(UserSessionManager.KEY_LastName);
+
+		ClientInfo ci = new ClientInfo(name);
+		Map<String, String> discution = new HashMap<String, String>();
 
 		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
 

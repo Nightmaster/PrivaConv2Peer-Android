@@ -21,7 +21,7 @@ public class Client implements Runnable
 
 		try
 		{
-			String pseudo = "stephen";
+			String pseudo = "stephen1";
 			ClientInfo cli = new ClientInfo(pseudo);
 			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 			DatagramSocket clientSocket = new DatagramSocket();

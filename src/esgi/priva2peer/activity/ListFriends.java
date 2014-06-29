@@ -1,26 +1,16 @@
 package esgi.priva2peer.activity;
 
 import java.util.HashMap;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.UserSessionManager;
 
@@ -54,49 +44,53 @@ public class ListFriends extends Activity
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
 		listfriends = (ListView) findViewById(R.id.friends_row);
 
-		HttpClient Client = new DefaultHttpClient();
-
-		String URL = "http://54.194.20.131:8080/webAPI/connect?username=" + name;
-		try
-		{
-			HttpGet httpget = new HttpGet(URL);
-
-			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-
-			String SetServerString = "";
-			SetServerString = Client.execute(httpget, responseHandler);
-
-			JSONObject JSONObject = new JSONObject(SetServerString);
-			String askFriends = JSONObject.get("askFriends").toString();
-
-			String[] parts = askFriends.split("\"");
-			if (parts[5] != "")
-			{
-				final Dialog dialog = new Dialog(context);
-				dialog.setContentView(R.layout.popup_invite_friends);
-				dialog.setTitle("New friends?");
-
-				// set the custom dialog components - text, image and button
-				TextView text = (TextView) dialog.findViewById(R.id.text);
-				text.setText("Do you know that guy?");
-				Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-				dialogButton.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						dialog.dismiss();
-					}
-				});
-				dialog.show();
-			}
-			Log.d("MyApp", parts[5]);
-
-		}
-		catch (Exception ex)
-		{
-			// content.setText("Fail!");
-		}
+		// HttpClient Client = new DefaultHttpClient();
+		//
+		// String URL = "http://54.194.20.131:8080/webAPI/connect?username=" +
+		// name;
+		// try
+		// {
+		// HttpGet httpget = new HttpGet(URL);
+		//
+		// ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		//
+		// String SetServerString = "";
+		// SetServerString = Client.execute(httpget, responseHandler);
+		//
+		// JSONObject JSONObject = new JSONObject(SetServerString);
+		// Log.d("yo", SetServerString);
+		// String askFriends = JSONObject.get("askFriends").toString();
+		//
+		// String[] parts = askFriends.split("\"");
+		//
+		// if (parts[5] != "")
+		// {
+		// final Dialog dialog = new Dialog(context);
+		// dialog.setContentView(R.layout.popup_invite_friends);
+		// dialog.setTitle("New friends?");
+		//
+		// // set the custom dialog components - text, image and button
+		// TextView text = (TextView) dialog.findViewById(R.id.text);
+		// text.setText("Do you know that guy?");
+		// Button dialogButton = (Button)
+		// dialog.findViewById(R.id.dialogButtonOK);
+		// dialogButton.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v)
+		// {
+		// dialog.dismiss();
+		// }
+		// });
+		// dialog.show();
+		// }
+		// Log.d("MyApp", parts[5]);
+		//
+		// }
+		// catch (Exception ex)
+		// {
+		// Log.d("yo", "yo");
+		// }
 
 		String[] listeStrings = {"Marie", "Stéphane"};
 

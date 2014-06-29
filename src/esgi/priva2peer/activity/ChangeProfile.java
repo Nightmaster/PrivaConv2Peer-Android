@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import esgi.priva2peer.R;
+import esgi.priva2peer.communication.Connexion;
 import esgi.priva2peer.communication.UserSessionManager;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
 
@@ -27,6 +28,8 @@ public class ChangeProfile extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.change_profile);
+		Connexion con = new Connexion();
+		con.StayAlive();
 
 		session = new UserSessionManager(getApplicationContext());
 

@@ -20,15 +20,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.data.AddFriendDataBase;
+import esgi.priva2peer.communication.Connexion;
 
 public class AddFriend extends Activity
 {
 	EditText UserName;
 	TextView content;
 	Button SearchMail;
-
-	AddFriendDataBase addFriendDataBase;
 
 	ArrayList<String> list = new ArrayList<String>();
 
@@ -40,13 +38,13 @@ public class AddFriend extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_friend);
 
-		addFriendDataBase = new AddFriendDataBase(this);
-		addFriendDataBase = addFriendDataBase.open();
-
 		content = (TextView) findViewById(R.id.content);
-
 		UserName = (EditText) findViewById(R.id.userName);
 		SearchMail = (Button) findViewById(R.id.SearchMail);
+
+		Connexion con = new Connexion();
+		con.StayAlive();
+
 		SearchMail.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -63,7 +61,7 @@ public class AddFriend extends Activity
 				{
 					String caractere = "@";
 					String login = "";
-					boolean trouve = UserName.getText().toString().contains(caractere);
+					boolean trouve = userName.contains(caractere);
 					if (trouve == true)
 					{
 						login += "email=";
@@ -88,7 +86,6 @@ public class AddFriend extends Activity
 						get.setHeader("Content-Type", "application/x-zip");
 						HttpResponse responseGet = client.execute(get);
 						HttpEntity resEntityGet = responseGet.getEntity();
-						content.setText(EntityUtils.toString(resEntityGet));
 						if (resEntityGet != null)
 						{
 							// do something with the response
@@ -96,11 +93,22 @@ public class AddFriend extends Activity
 						}
 
 						Header[] headers = responseGet.getAllHeaders();
+
 						for (int i = 0; i < headers.length; i++ )
 						{
 							Header header = headers[i];
-							Log.e("HTTP: ", "name: " + header.getName());
-							Log.e("HTTP: ", "value: " + header.getValue());
+							if (header.getValue().contains("sessId") == true)
+							{
+								String sessId = header.getValue();
+								String[] sess = sessId.split(";");
+
+								String URL1 = "http://54.194.20.131:8080/webAPI/" + sess[0] + ';';
+								HttpGet gett = new HttpGet(URL1);
+								gett.setHeader("Cookie", sess[0] + ';');
+								HttpResponse responseGet1 = client.execute(gett);
+
+								Log.i("HeaderName", sess[0]);
+							}
 						}
 
 					}
@@ -125,7 +133,6 @@ public class AddFriend extends Activity
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		addFriendDataBase.close();
 	}
 
 }

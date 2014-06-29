@@ -19,7 +19,6 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase _db)
 	{
 		_db.execSQL(LoginDataBaseAdapter.DATABASE_CREATE);
-		_db.execSQL(AddFriendDataBase.DATABASE_CREATE);
 
 	}
 

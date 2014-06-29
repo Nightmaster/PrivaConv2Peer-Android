@@ -1,9 +1,14 @@
 package esgi.priva2peer.activity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -20,8 +25,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import esgi.priva2peer.R;
+import esgi.priva2peer.communication.Connexion;
 import esgi.priva2peer.communication.UserSessionManager;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
 
@@ -47,6 +52,9 @@ public class Home extends Activity
 		session = new UserSessionManager(getApplicationContext());
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
+
+		Connexion con = new Connexion();
+		con.StayAlive();
 
 		// create a instance of SQLite Database
 		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
@@ -75,7 +83,7 @@ public class Home extends Activity
 			{
 				session.logoutUser();
 				HttpClient Client = new DefaultHttpClient();
-				String URL = "http://54.194.20.131:8080/webAPI/disconnect?";
+				String URL = "http://54.194.20.131:8080/webAPI/disconnect";
 				try
 				{
 					HttpGet httpget = new HttpGet(URL);
@@ -87,7 +95,7 @@ public class Home extends Activity
 				}
 				catch (Exception ex)
 				{
-					// content.setText("Fail!");
+					content.setText("Fail!");
 				}
 
 			}
@@ -105,18 +113,14 @@ public class Home extends Activity
 		final EditText editTextPassword = (EditText) dialog.findViewById(R.id.editTextPasswordToLogin);
 
 		Button btnSignIn = (Button) dialog.findViewById(R.id.buttonSignIn);
-
-		// Set On ClickListener
 		btnSignIn.setOnClickListener(new View.OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
-
 				String userName = editTextUserName.getText().toString();
 				String password = editTextPassword.getText().toString();
-
 				try
 				{
 					userName = URLEncoder.encode(userName, "UTF-8");
@@ -133,7 +137,6 @@ public class Home extends Activity
 				}
 				catch (NoSuchAlgorithmException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				m.reset();
@@ -158,37 +161,46 @@ public class Home extends Activity
 					login += "username=";
 				}
 
-				HttpClient Client = new DefaultHttpClient();
-
-				String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
 				try
 				{
-					HttpGet httpget = new HttpGet(URL);
-
+					HttpClient client = new DefaultHttpClient();
 					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+					String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
 
+					HttpGet get = new HttpGet(URL);
+					get.setHeader("Cookie", "application/x-zip");
+					HttpResponse responseGet = client.execute(get);
 					String SetServerString = "";
-					SetServerString = Client.execute(httpget, responseHandler);
+					SetServerString = client.execute(get, responseHandler);
 
 					JSONObject JSONObject = new JSONObject(SetServerString);
 					String name = JSONObject.get("user").toString();
-					String askFriends = JSONObject.get("askFriends").toString();
-					Boolean connexion = JSONObject.getBoolean("connection");
-					if (connexion == true)
-					{
-						Toast.makeText(getApplicationContext(), "connect to server PrivaConv2Peer", Toast.LENGTH_LONG).show();
-					}
-					content.setText(name);
 					String[] parts = name.split("\"");
-					Log.d("MyApp", askFriends);
+					Log.d("MyApp", parts[7]);
 
-					content.setText(name);
 					session = new UserSessionManager(getApplicationContext());
 					session.createUserLoginSession(parts[7], parts[3], parts[11], parts[15]);
+					Header[] headers = responseGet.getAllHeaders();
+
+					for (int i = 0; i < headers.length; i++ )
+					{
+						Header header = headers[i];
+						if (header.getValue().contains("sessId") == true)
+						{
+							String sessId = header.getValue();
+							String[] sess = sessId.split(";");
+
+							Log.i("HeaderName", header.getValue());
+							Log.i("HeaderName", sess[0]);
+
+							// get.setHeader("Cookie", sess[0] + ";");
+							// saveCookie(header.getValue());
+						}
+					}
 				}
-				catch (Exception ex)
+				catch (Exception e)
 				{
-					// content.setText("Fail!");
+					e.printStackTrace();
 				}
 
 				Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -200,6 +212,35 @@ public class Home extends Activity
 		});
 
 		dialog.show();
+	}
+
+	public void saveCookie(String content)
+	{
+		FileOutputStream fop = null;
+		File file;
+
+		try
+		{
+
+			file = new File("cookie_session.txt");
+			fop = new FileOutputStream(file);
+
+			if (!file.exists())
+			{
+				file.createNewFile();
+			}
+
+			byte[] contentInBytes = content.getBytes();
+
+			fop.write(contentInBytes);
+			fop.flush();
+			fop.close();
+
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
