@@ -1,26 +1,38 @@
 package esgi.priva2peer.activity;
 
+import java.math.BigInteger;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.Connexion;
 import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.data.Constants;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class ChangeProfile extends Activity
 {
 
 	UserSessionManager session;
+	final Context context = this;
 
-	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName, SecurePassword, ConfirmSecurePassword;
+	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName;
 	LoginDataBaseAdapter loginDataBaseAdapter;
 
 	@Override
@@ -28,8 +40,6 @@ public class ChangeProfile extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.change_profile);
-		Connexion con = new Connexion();
-		con.StayAlive();
 
 		session = new UserSessionManager(getApplicationContext());
 
@@ -41,15 +51,12 @@ public class ChangeProfile extends Activity
 
 		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
 
-		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
-		loginDataBaseAdapter = loginDataBaseAdapter.open();
+		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);
-		editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
 		editTextLastName = (EditText) findViewById(R.id.editTextLastName);
+		editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
-		SecurePassword = (EditText) findViewById(R.id.SecurePassword);
-		ConfirmSecurePassword = (EditText) findViewById(R.id.ConfirmSecurePassword);
 
 		Button btnchangedProfile;
 
@@ -61,25 +68,21 @@ public class ChangeProfile extends Activity
 			public void onClick(View v)
 			{
 				String userMail = editTextUserMail.getText().toString();
+				String userName = editTextUserName.getText().toString();
 
-				String lastName = editTextLastName.getText().toString();
-				String firstName = editTextFirstName.getText().toString();
+				String lastname = editTextLastName.getText().toString();
+				String firstname = editTextFirstName.getText().toString();
 
 				String password = editTextPassword.getText().toString();
 				String confirmPassword = editTextConfirmPassword.getText().toString();
 
-				String securePassword = SecurePassword.getText().toString();
-				String confirmSecurePassword = ConfirmSecurePassword.getText().toString();
-
 				try
 				{
 					userMail = URLEncoder.encode(userMail, "UTF-8");
-					firstName = URLEncoder.encode(firstName, "UTF-8");
-					lastName = URLEncoder.encode(lastName, "UTF-8");
-					password = URLEncoder.encode(password, "UTF-8");
-					confirmPassword = URLEncoder.encode(confirmPassword, "UTF-8");
-					securePassword = URLEncoder.encode(securePassword, "UTF-8");
-					confirmSecurePassword = URLEncoder.encode(confirmSecurePassword, "UTF-8");
+					userName = URLEncoder.encode(userName, "UTF-8");
+					lastname = URLEncoder.encode(lastname, "UTF-8");
+					firstname = URLEncoder.encode(firstname, "UTF-8");
+
 				}
 				catch (Exception e)
 				{}
@@ -97,11 +100,57 @@ public class ChangeProfile extends Activity
 				}
 				else
 				{
-					// Save the Data in Database
-					// /webAPI/:user/updateInfos
-					//
-					// loginDataBaseAdapter.updateEntry(userName, password,
-					// userMail, firstName, lastName);
+
+					HttpClient Client = new DefaultHttpClient();
+					try
+					{
+						MessageDigest m = null;
+						try
+						{
+							m = MessageDigest.getInstance("MD5");
+						}
+						catch (NoSuchAlgorithmException e)
+						{
+							e.printStackTrace();
+						}
+						m.reset();
+						m.update(password.getBytes());
+						byte[] digest = m.digest();
+						BigInteger bigInt = new BigInteger(1, digest);
+						String hashtext = bigInt.toString(16);
+						while (hashtext.length() < 32)
+						{
+							hashtext = "0" + hashtext;
+						}
+						String parametre = "";
+						if (userName != "")
+							parametre = "?username=" + userName;
+						if (userMail != "")
+							parametre = (parametre == "") ? "?email=" + userMail : "&email=" + userMail;
+						if (lastname != "")
+							parametre = (parametre == "") ? "?name=" + lastname : "&name=" + lastname;
+						if (firstname != "")
+							parametre = (parametre == "") ? "?firstname=" + firstname : "&firstname=" + firstname;
+						if (hashtext != "" && (password != "" && confirmPassword != ""))
+							parametre = (parametre == "") ? "?pw=" + hashtext : "&pw=" + hashtext;
+
+						String URL = Constants.SRV_URL + Constants.SRV_API + "updateInfos" + parametre;
+						HttpGet httpget = new HttpGet(URL);
+						ResponseHandler<String> responseHandler = new BasicResponseHandler();
+						if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+						{
+							httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+						}
+
+						String SetServerString = "";
+						SetServerString = Client.execute(httpget, responseHandler);
+						Log.i("json response", SetServerString);
+						Log.i("json response", URL);
+					}
+					catch (Exception ex)
+					{
+						Log.i("json response", "fail!");
+					}
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
 				}
 

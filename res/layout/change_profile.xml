@@ -1,75 +1,62 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content">
+<LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ChangeProfile" >
+    android:orientation="vertical"
+    android:gravity="center_vertical" >
 
     <EditText
-        android:id="@+id/NickName"
+        android:id="@+id/editTextUserName"
+        android:hint="User Name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <requestFocus />
+    </EditText>
+    
+       <EditText
+        android:id="@+id/editTextUserMail"
+        android:hint="User Mail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <requestFocus />
+    </EditText>
+
+     <EditText
+        android:id="@+id/editTextFirstName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/LastName"
-        android:layout_centerHorizontal="true"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Nick Name"
-        android:inputType="numberDecimal" />
+        android:hint="First Name">
+        <requestFocus />
+    </EditText>    
 
     <EditText
-        android:id="@+id/LastName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/NickName"
-        android:layout_below="@+id/FirstName"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Last Name"
-        android:inputType="numberDecimal" />
-
-    <EditText
-        android:id="@+id/ConfirmPassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Password"
-        android:layout_below="@+id/Password"
-        android:ems="10"
-        android:hint="Confirm Password"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/Password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editMailAdress"
-        android:layout_below="@+id/editMailAdress"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/editMailAdress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/NickName"
-        android:layout_alignRight="@+id/NickName"
-        android:layout_below="@+id/NickName"
-        android:ems="10"
-        android:hint="Mail Adress"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/FirstName"
+        android:id="@+id/editTextLastName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/LastName"
-        android:layout_weight="1"
+        android:layout_below="@+id/LastName"
         android:ems="10"
-        android:hint="First Name"
-        android:inputType="numberDecimal" />
+        android:hint="Last Name" >
+        <requestFocus />
+	</EditText>
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword" >
+        <requestFocus />
+	</EditText>
+    <EditText
+        android:id="@+id/editTextConfirmPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="ConfirmPassword"
+        android:inputType="textPassword" >
+    </EditText>
 
     <Button
         android:id="@+id/profile_changed"
@@ -77,29 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ConfirmPassword"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="92dp"
         android:text="Change Profile" />
 
-    <EditText
-        android:id="@+id/SecurePassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ConfirmPassword"
-        android:layout_below="@+id/ConfirmPassword"
-        android:ems="10"
-        android:hint="SecurePassword"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/ConfirmSecurePassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/SecurePassword"
-        android:layout_below="@+id/SecurePassword"
-        android:ems="10"
-        android:hint="ConfirmSecurePassword"
-        android:inputType="textPassword" >
-
-        <requestFocus />
-    </EditText>
-
-</RelativeLayout>
+</LinearLayout>
+</ScrollView>

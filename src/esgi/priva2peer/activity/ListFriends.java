@@ -77,19 +77,20 @@ public class ListFriends extends Activity
 		{
 			HttpGet httpget = new HttpGet(URL);
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			Log.d("sessId", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "IfNothingFound"));
 
 			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
 			{
-				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "IfNothingFound"));
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
 			}
 			// HttpResponse responseGet = Client.execute(httpget);
-
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
+
+			Log.d("json response", SetServerString);
 			JSONObject friend_Object = new JSONObject(SetServerString);
 			String friends = friend_Object.get("friends").toString();
 			String[] parts = friends.split("\"");
+			Log.d("liste damis", friends);
 
 			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_1", parts[3]).commit();
 
@@ -119,11 +120,14 @@ public class ListFriends extends Activity
 							HttpClient client = new DefaultHttpClient();
 							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
 
-							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&valide=true";
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&validate=true";
 
 							ResponseHandler<String> responseHandler = new BasicResponseHandler();
 							HttpGet get = new HttpGet(URL);
-							get.setHeader("Cookie", "sessId");
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+							{
+								get.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
 							String SetServerString = "";
 							SetServerString = client.execute(get, responseHandler);
 
@@ -150,12 +154,60 @@ public class ListFriends extends Activity
 						{
 							HttpClient client = new DefaultHttpClient();
 							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
-
-							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&valide=false";
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&validate=false";
 
 							ResponseHandler<String> responseHandler = new BasicResponseHandler();
 							HttpGet get = new HttpGet(URL);
-							get.setHeader("Cookie", "sessId");
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+							{
+								get.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
+							String SetServerString = "";
+							SetServerString = client.execute(get, responseHandler);
+
+							JSONObject JSONObject = new JSONObject(SetServerString);
+							String name = JSONObject.get("user").toString();
+							String[] parts = name.split("\"");
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
+			}
+
+			if (a_friend[3] != "")
+			{
+				final Dialog dialog = new Dialog(context);
+				dialog.setContentView(R.layout.popup_invite_friends);
+				dialog.setTitle("New friends?");
+
+				TextView text = (TextView) dialog.findViewById(R.id.text);
+				text.setText(a_friend[1] + " te demande en ami.");
+				Button ConfirmButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+				Button RefusedButton = (Button) dialog.findViewById(R.id.dialogButtonNOK);
+				ConfirmButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						try
+						{
+							HttpClient client = new DefaultHttpClient();
+							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
+
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&validate=true";
+
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							HttpGet get = new HttpGet(URL);
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+							{
+								get.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
 							String SetServerString = "";
 							SetServerString = client.execute(get, responseHandler);
 
@@ -163,6 +215,119 @@ public class ListFriends extends Activity
 							String name = JSONObject.get("user").toString();
 							String[] parts = name.split("\"");
 							Log.d("MyApp", parts[7]);
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						dialog.dismiss();
+					}
+				});
+				RefusedButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+
+						try
+						{
+							HttpClient client = new DefaultHttpClient();
+							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&validate=false";
+
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							HttpGet get = new HttpGet(URL);
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+							{
+								get.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
+							String SetServerString = "";
+							SetServerString = client.execute(get, responseHandler);
+
+							JSONObject JSONObject = new JSONObject(SetServerString);
+							String name = JSONObject.get("user").toString();
+							String[] parts = name.split("\"");
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
+			}
+
+			if (a_friend[5] != "")
+			{
+				final Dialog dialog = new Dialog(context);
+				dialog.setContentView(R.layout.popup_invite_friends);
+				dialog.setTitle("New friends?");
+
+				TextView text = (TextView) dialog.findViewById(R.id.text);
+				text.setText(a_friend[1] + " te demande en ami.");
+				Button ConfirmButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+				Button RefusedButton = (Button) dialog.findViewById(R.id.dialogButtonNOK);
+				ConfirmButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						try
+						{
+							HttpClient client = new DefaultHttpClient();
+							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
+
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&validate=true";
+
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							HttpGet get = new HttpGet(URL);
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+							{
+								get.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
+							String SetServerString = "";
+							SetServerString = client.execute(get, responseHandler);
+
+							JSONObject JSONObject = new JSONObject(SetServerString);
+							String name = JSONObject.get("user").toString();
+							String[] parts = name.split("\"");
+							Log.d("MyApp", parts[7]);
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						dialog.dismiss();
+					}
+				});
+				RefusedButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+
+						try
+						{
+							HttpClient client = new DefaultHttpClient();
+							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&validate=false";
+
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							HttpGet get = new HttpGet(URL);
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+							{
+								get.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
+							String SetServerString = "";
+							SetServerString = client.execute(get, responseHandler);
+
+							JSONObject JSONObject = new JSONObject(SetServerString);
+							String name = JSONObject.get("user").toString();
+							String[] parts = name.split("\"");
 
 						}
 						catch (Exception e)
@@ -180,7 +345,7 @@ public class ListFriends extends Activity
 			Log.d("liste", "Fail!");
 		}
 
-		String[] listeStrings = {PreferenceManager.getDefaultSharedPreferences(context).getString("friend_1", "IfNothingFound")};
+		String[] listeStrings = {PreferenceManager.getDefaultSharedPreferences(context).getString("friend_1", "")};
 		listfriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listeStrings));
 
 		btnAddFriends.setOnClickListener(new View.OnClickListener()

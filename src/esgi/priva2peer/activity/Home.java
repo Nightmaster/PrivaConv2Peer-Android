@@ -123,7 +123,6 @@ public class Home extends Activity
 				try
 				{
 					userName = URLEncoder.encode(userName, "UTF-8");
-					password = URLEncoder.encode(password, "UTF-8");
 
 				}
 				catch (Exception e)
