@@ -3,12 +3,10 @@ package esgi.priva2peer.activity;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,20 +75,13 @@ public class AddFriend extends Activity
 					}
 					catch (Exception e)
 					{}
+					String URL = "http://54.194.20.131:8080/webAPI/addFriend?" + login + userName;
 					try
 					{
 						HttpClient client = new DefaultHttpClient();
-
-						String URL = "http://54.194.20.131:8080/webAPI/addFriend?" + login + userName;
 						HttpGet get = new HttpGet(URL);
-						get.setHeader("Content-Type", "application/x-zip");
+
 						HttpResponse responseGet = client.execute(get);
-						HttpEntity resEntityGet = responseGet.getEntity();
-						if (resEntityGet != null)
-						{
-							// do something with the response
-							Log.i("GET ", EntityUtils.toString(resEntityGet));
-						}
 
 						Header[] headers = responseGet.getAllHeaders();
 
@@ -101,11 +92,7 @@ public class AddFriend extends Activity
 							{
 								String sessId = header.getValue();
 								String[] sess = sessId.split(";");
-
-								String URL1 = "http://54.194.20.131:8080/webAPI/" + sess[0] + ';';
-								HttpGet gett = new HttpGet(URL1);
-								gett.setHeader("Cookie", sess[0] + ';');
-								HttpResponse responseGet1 = client.execute(gett);
+								get.setHeader("Cookie", sess[0]);
 
 								Log.i("HeaderName", sess[0]);
 							}

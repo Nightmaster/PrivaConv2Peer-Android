@@ -20,13 +20,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.Connexion;
 import esgi.priva2peer.communication.UserSessionManager;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
 
@@ -35,9 +35,6 @@ public class Home extends Activity
 	protected static final String LOGTAG = null;
 
 	final Context context = this;
-
-	private DefaultHttpClient httpClient;
-	private String someVariable;
 	public static org.apache.http.cookie.Cookie cookie = null;
 
 	UserSessionManager session;
@@ -52,9 +49,6 @@ public class Home extends Activity
 		session = new UserSessionManager(getApplicationContext());
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-
-		Connexion con = new Connexion();
-		con.StayAlive();
 
 		// create a instance of SQLite Database
 		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
@@ -88,6 +82,10 @@ public class Home extends Activity
 				{
 					HttpGet httpget = new HttpGet(URL);
 					ResponseHandler<String> responseHandler = new BasicResponseHandler();
+					if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+					{
+						httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+					}
 
 					String SetServerString = "";
 					SetServerString = Client.execute(httpget, responseHandler);
@@ -163,12 +161,12 @@ public class Home extends Activity
 
 				try
 				{
+
+					String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
 					HttpClient client = new DefaultHttpClient();
 					ResponseHandler<String> responseHandler = new BasicResponseHandler();
-					String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
-
 					HttpGet get = new HttpGet(URL);
-					get.setHeader("Cookie", "application/x-zip");
+					get.setHeader("Cookie", "sessId");
 					HttpResponse responseGet = client.execute(get);
 					String SetServerString = "";
 					SetServerString = client.execute(get, responseHandler);
@@ -189,14 +187,15 @@ public class Home extends Activity
 						{
 							String sessId = header.getValue();
 							String[] sess = sessId.split(";");
+							String content_sesId = sess[0];
+							PreferenceManager.getDefaultSharedPreferences(context).edit().putString("MYLABEL", content_sesId).commit();
 
-							Log.i("HeaderName", header.getValue());
-							Log.i("HeaderName", sess[0]);
+							Log.d("sessId", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
 
-							// get.setHeader("Cookie", sess[0] + ";");
-							// saveCookie(header.getValue());
 						}
 					}
+					responseGet.getEntity().consumeContent();
+
 				}
 				catch (Exception e)
 				{
@@ -207,7 +206,6 @@ public class Home extends Activity
 				list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(list_f_intent);
 				dialog.dismiss();
-
 			}
 		});
 

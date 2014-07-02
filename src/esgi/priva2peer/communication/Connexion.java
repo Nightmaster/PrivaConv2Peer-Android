@@ -1,50 +1,41 @@
 package esgi.priva2peer.communication;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Connexion
 {
 
+	private Context context;
+
 	public void StayAlive()
 	{
+
 		try
 		{
-			HttpClient client = new DefaultHttpClient();
+			HttpClient Client = new DefaultHttpClient();
 			String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
-			HttpGet get = new HttpGet(URL);
-			get.setHeader("Content-Type", "application/x-zip");
-			HttpResponse responseGet = client.execute(get);
-			String fdf;
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			Log.d("sessId", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
 
-			Header[] headers = responseGet.getAllHeaders();
-
-			for (int i = 0; i < headers.length; i++ )
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
 			{
-				Header header = headers[i];
-				if (header.getValue().contains("sessId") == true)
-				{
-					String sessId = header.getValue();
-					String[] sess = sessId.split(";");
-					fdf = sess[0];
-
-					String URL1 = "http://54.194.20.131:8080/webAPI/stayAlive";
-					HttpGet gett = new HttpGet(URL1);
-					gett.setHeader("Cookie", sess[0] + ';');
-					HttpResponse send_sess = client.execute(gett);
-
-					Log.i("HeaderName", sess[0]);
-				}
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
 			}
 
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
 		}
-		catch (Exception e)
+		catch (Exception ex)
 		{
-			e.printStackTrace();
+			Log.d("fdf", "Fail!");
 		}
 	}
 }
