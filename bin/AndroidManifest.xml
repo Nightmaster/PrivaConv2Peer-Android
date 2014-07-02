@@ -42,14 +42,6 @@
             android:name="esgi.priva2peer.Session"
             android:label="@string/title_activity_session" >
         </activity>
-        <activity
-            android:name="esgi.priva2peer.activity.ServerActivity"
-            android:label="@string/title_activity_server" >
-        </activity>
-        <activity
-            android:name="esgi.priva2peer.activity.ClientActivty"
-            android:label="@string/title_activity_client_activty" >
-        </activity>
     </application>
 
 </manifest>

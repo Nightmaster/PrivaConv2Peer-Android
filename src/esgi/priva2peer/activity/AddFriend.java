@@ -2,14 +2,15 @@ package esgi.priva2peer.activity;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,11 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.Connexion;
+import esgi.priva2peer.data.Constants;
 
 public class AddFriend extends Activity
 {
 	EditText UserName;
 	TextView content;
+	final Context context = this;
+
 	Button SearchMail;
 
 	ArrayList<String> list = new ArrayList<String>();
@@ -75,33 +79,25 @@ public class AddFriend extends Activity
 					}
 					catch (Exception e)
 					{}
-					String URL = "http://54.194.20.131:8080/webAPI/addFriend?" + login + userName;
+					HttpClient Client = new DefaultHttpClient();
 					try
 					{
-						HttpClient client = new DefaultHttpClient();
-						HttpGet get = new HttpGet(URL);
+						String URL = Constants.SRV_URL + Constants.SRV_API + "addFriend?" + login + userName;
 
-						HttpResponse responseGet = client.execute(get);
-
-						Header[] headers = responseGet.getAllHeaders();
-
-						for (int i = 0; i < headers.length; i++ )
+						HttpGet httpget = new HttpGet(URL);
+						ResponseHandler<String> responseHandler = new BasicResponseHandler();
+						if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
 						{
-							Header header = headers[i];
-							if (header.getValue().contains("sessId") == true)
-							{
-								String sessId = header.getValue();
-								String[] sess = sessId.split(";");
-								get.setHeader("Cookie", sess[0]);
-
-								Log.i("HeaderName", sess[0]);
-							}
+							httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
 						}
 
+						String SetServerString = "";
+						SetServerString = Client.execute(httpget, responseHandler);
+						content.setText(SetServerString);
 					}
-					catch (Exception e)
+					catch (Exception ex)
 					{
-						e.printStackTrace();
+						content.setText("Fail!");
 					}
 
 				}

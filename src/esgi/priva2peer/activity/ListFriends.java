@@ -11,19 +11,24 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
 import org.json.JSONObject;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.data.Constants;
 
 public class ListFriends extends Activity
 {
@@ -60,6 +65,8 @@ public class ListFriends extends Activity
 		String last_n = user.get(UserSessionManager.KEY_FirstName);
 		String first_n = user.get(UserSessionManager.KEY_LastName);
 
+		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
+
 		btnAddFriends = (Button) findViewById(R.id.buttonAddFriends);
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
 		listfriends = (ListView) findViewById(R.id.friends_row);
@@ -76,21 +83,97 @@ public class ListFriends extends Activity
 			{
 				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "IfNothingFound"));
 			}
+			// HttpResponse responseGet = Client.execute(httpget);
 
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
-			JSONObject JSONObject = new JSONObject(SetServerString);
-			String friends = JSONObject.get("friends").toString();
+			JSONObject friend_Object = new JSONObject(SetServerString);
+			String friends = friend_Object.get("friends").toString();
 			String[] parts = friends.split("\"");
 
 			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_1", parts[3]).commit();
-			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_2", parts[10]).commit();
 
-			String askfriend = JSONObject.get("askfriend").toString();
-			String[] invite_friend = askfriend.split("\"");
-			Log.i("MyApp", invite_friend[1]);
-			Log.i("MyApp", invite_friend[3]);
-			Log.i("MyApp", SetServerString);
+			JSONObject askfriend_Object = new JSONObject(SetServerString);
+			String askfriend = askfriend_Object.get("askFriend").toString();
+			String[] a_friend = askfriend.split("\"");
+			Log.i("MyApp", a_friend[1]);
+			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("ami1", a_friend[1]).commit();
+
+			if (a_friend[1] != "")
+			{
+				final Dialog dialog = new Dialog(context);
+				dialog.setContentView(R.layout.popup_invite_friends);
+				dialog.setTitle("New friends?");
+
+				TextView text = (TextView) dialog.findViewById(R.id.text);
+				text.setText(a_friend[1] + " te demande en ami.");
+				Button ConfirmButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+				Button RefusedButton = (Button) dialog.findViewById(R.id.dialogButtonNOK);
+				ConfirmButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						try
+						{
+							HttpClient client = new DefaultHttpClient();
+							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
+
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&valide=true";
+
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							HttpGet get = new HttpGet(URL);
+							get.setHeader("Cookie", "sessId");
+							String SetServerString = "";
+							SetServerString = client.execute(get, responseHandler);
+
+							JSONObject JSONObject = new JSONObject(SetServerString);
+							String name = JSONObject.get("user").toString();
+							String[] parts = name.split("\"");
+							Log.d("MyApp", parts[7]);
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						dialog.dismiss();
+					}
+				});
+				RefusedButton.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+
+						try
+						{
+							HttpClient client = new DefaultHttpClient();
+							String user = PreferenceManager.getDefaultSharedPreferences(context).getString("ami1", "defaultStringIfNothingFound");
+
+							String URL = Constants.SRV_URL + Constants.SRV_API + "answerRequest?username=" + user + "&valide=false";
+
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							HttpGet get = new HttpGet(URL);
+							get.setHeader("Cookie", "sessId");
+							String SetServerString = "";
+							SetServerString = client.execute(get, responseHandler);
+
+							JSONObject JSONObject = new JSONObject(SetServerString);
+							String name = JSONObject.get("user").toString();
+							String[] parts = name.split("\"");
+							Log.d("MyApp", parts[7]);
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
+			}
 		}
 		catch (Exception ex)
 		{
@@ -98,7 +181,6 @@ public class ListFriends extends Activity
 		}
 
 		String[] listeStrings = {PreferenceManager.getDefaultSharedPreferences(context).getString("friend_1", "IfNothingFound")};
-
 		listfriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listeStrings));
 
 		btnAddFriends.setOnClickListener(new View.OnClickListener()

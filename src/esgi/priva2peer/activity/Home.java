@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.data.Constants;
 import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class Home extends Activity
@@ -77,7 +78,7 @@ public class Home extends Activity
 			{
 				session.logoutUser();
 				HttpClient Client = new DefaultHttpClient();
-				String URL = "http://54.194.20.131:8080/webAPI/disconnect";
+				String URL = Constants.SRV_URL + Constants.SRV_API + "disconnect";
 				try
 				{
 					HttpGet httpget = new HttpGet(URL);
@@ -162,7 +163,7 @@ public class Home extends Activity
 				try
 				{
 
-					String URL = "http://54.194.20.131:8080/webAPI/connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
+					String URL = Constants.SRV_URL + Constants.SRV_API + "connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
 					HttpClient client = new DefaultHttpClient();
 					ResponseHandler<String> responseHandler = new BasicResponseHandler();
 					HttpGet get = new HttpGet(URL);

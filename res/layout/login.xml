@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:hint="User Name or Email"
         android:ems="10" 
-        android:text="brunogb" >
+        android:text="stef89" >
         <requestFocus />
     </EditText>
  
@@ -21,7 +21,7 @@
         android:ems="10"
         android:inputType="textPassword"
         android:hint="Password" 
-        android:text="djangapass"/>
+        android:text="pass"/>
  
     <Button
         android:id="@+id/buttonSignIn"
