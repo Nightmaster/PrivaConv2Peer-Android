@@ -14,11 +14,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.communication.client.Client;
-import esgi.priva2peer.communication.client.ClientInfo;
 import esgi.priva2peer.communication.server.Server;
 
 public class ChatActivity extends Activity
@@ -35,17 +33,7 @@ public class ChatActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
 
-		session = new UserSessionManager(getApplicationContext());
-		HashMap<String, String> user = session.getUserDetails();
-		String name = user.get(UserSessionManager.KEY_NAME);
-		String email = user.get(UserSessionManager.KEY_EMAIL);
-		String last_n = user.get(UserSessionManager.KEY_FirstName);
-		String first_n = user.get(UserSessionManager.KEY_LastName);
-
-		ClientInfo ci = new ClientInfo(name);
-		Map<String, String> discution = new HashMap<String, String>();
-
-		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
+		Map<String, String> talk = new HashMap<String, String>();
 
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);

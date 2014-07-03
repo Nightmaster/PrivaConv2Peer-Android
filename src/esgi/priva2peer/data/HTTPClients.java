@@ -17,7 +17,7 @@ public class HTTPClients
 	public static String session_id;
 	public static HTTPClients _me;
 
-	private HTTPClients()
+	public HTTPClients()
 	{
 
 	}

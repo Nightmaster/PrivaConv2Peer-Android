@@ -1,4 +1,4 @@
-package esgi.priva2peer.communication;
+package esgi.priva2peer.communication.server;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

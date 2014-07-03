@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.Connexion;
 import esgi.priva2peer.data.Constants;
 
 public class AddFriend extends Activity
@@ -41,8 +41,23 @@ public class AddFriend extends Activity
 		UserName = (EditText) findViewById(R.id.userName);
 		SearchMail = (Button) findViewById(R.id.SearchMail);
 
-		Connexion con = new Connexion();
-		con.StayAlive();
+		HttpClient Client = new DefaultHttpClient();
+		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
+		try
+		{
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+			}
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+		}
+		catch (Exception ex)
+		{
+			Log.d("liste", "Fail!");
+		}
 
 		SearchMail.setOnClickListener(new View.OnClickListener()
 		{

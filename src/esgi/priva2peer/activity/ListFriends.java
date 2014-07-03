@@ -1,6 +1,9 @@
 package esgi.priva2peer.activity;
 
-import java.util.HashMap;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -27,8 +30,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.Connexion;
-import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.communication.server.Connexion;
 import esgi.priva2peer.data.Constants;
 
 public class ListFriends extends Activity
@@ -59,15 +62,6 @@ public class ListFriends extends Activity
 		// Session value
 
 		session = new UserSessionManager(getApplicationContext());
-
-		HashMap<String, String> user = session.getUserDetails();
-		String name = user.get(UserSessionManager.KEY_NAME);
-		String email = user.get(UserSessionManager.KEY_EMAIL);
-		String last_n = user.get(UserSessionManager.KEY_FirstName);
-		String first_n = user.get(UserSessionManager.KEY_LastName);
-
-		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
-
 		Connexion con = new Connexion();
 		String num = con.getLocalIpAddress();
 		Toast.makeText(getApplicationContext(), num, Toast.LENGTH_LONG).show();
@@ -375,12 +369,34 @@ public class ListFriends extends Activity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				String selectedFromList = (listfriends.getItemAtPosition(position).toString());
-
 				Intent add_f_intent = new Intent(view.getContext(), ChatActivity.class);
-				add_f_intent.putExtra("mytext", selectedFromList);
 				startActivity(add_f_intent);
 			}
 		});
+
+	}
+
+	public static String getIpAddress()
+	{
+		try
+		{
+			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();)
+			{
+				NetworkInterface intf = en.nextElement();
+				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
+				{
+					InetAddress inetAddress = enumIpAddr.nextElement();
+					if (!inetAddress.isLoopbackAddress())
+					{
+						return inetAddress.getHostAddress().toString();
+					}
+				}
+			}
+		}
+		catch (SocketException e)
+		{
+			// Log.e(Constants.LOG_TAG, e.getMessage(), e);
+		}
+		return null;
 	}
 }

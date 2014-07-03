@@ -1,8 +1,5 @@
 package esgi.priva2peer.activity;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -27,9 +24,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
-import esgi.priva2peer.data.LoginDataBaseAdapter;
+import esgi.priva2peer.data.HTTPClients;
 
 public class Home extends Activity
 {
@@ -42,7 +39,6 @@ public class Home extends Activity
 	TextView content;
 
 	Button btnSignIn, btnSignUp, btnLogout;
-	LoginDataBaseAdapter loginDataBaseAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -50,10 +46,6 @@ public class Home extends Activity
 		session = new UserSessionManager(getApplicationContext());
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-
-		// create a instance of SQLite Database
-		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
-		loginDataBaseAdapter = loginDataBaseAdapter.open();
 
 		btnSignIn = (Button) findViewById(R.id.buttonSignIN);
 		btnSignUp = (Button) findViewById(R.id.buttonSignUP);
@@ -89,11 +81,10 @@ public class Home extends Activity
 
 					String SetServerString = "";
 					SetServerString = Client.execute(httpget, responseHandler);
-					content.setText(SetServerString);
 				}
 				catch (Exception ex)
 				{
-					content.setText("Fail!");
+					ex.printStackTrace();
 				}
 
 			}
@@ -179,6 +170,9 @@ public class Home extends Activity
 					session.createUserLoginSession(parts[7], parts[3], parts[11], parts[15]);
 					Header[] headers = responseGet.getAllHeaders();
 
+					HTTPClients newhttp = new HTTPClients();
+					HTTPClients.getDefaultHttpClient();
+
 					for (int i = 0; i < headers.length; i++ )
 					{
 						Header header = headers[i];
@@ -211,40 +205,9 @@ public class Home extends Activity
 		dialog.show();
 	}
 
-	public void saveCookie(String content)
-	{
-		FileOutputStream fop = null;
-		File file;
-
-		try
-		{
-
-			file = new File("cookie_session.txt");
-			fop = new FileOutputStream(file);
-
-			if (!file.exists())
-			{
-				file.createNewFile();
-			}
-
-			byte[] contentInBytes = content.getBytes();
-
-			fop.write(contentInBytes);
-			fop.flush();
-			fop.close();
-
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		// Close The Database
-		loginDataBaseAdapter.close();
 	}
 }

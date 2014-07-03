@@ -28,7 +28,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.data.LoginDataBaseAdapter;
 import esgi.priva2peer.data.PasswordUtilities;
 
 public class SignUPActivity extends Activity
@@ -37,16 +36,11 @@ public class SignUPActivity extends Activity
 	Spinner spinner;
 	Button btnCreateAccount;
 
-	LoginDataBaseAdapter loginDataBaseAdapter;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.signup);
-
-		loginDataBaseAdapter = new LoginDataBaseAdapter(this);
-		loginDataBaseAdapter = loginDataBaseAdapter.open();
 
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);
@@ -144,9 +138,7 @@ public class SignUPActivity extends Activity
 						ex.printStackTrace();
 					}
 
-					loginDataBaseAdapter.insertEntry(userName, password, userMail, firstName, lastName);
 					Toast.makeText(getApplicationContext(), "Account Successfully Created ", Toast.LENGTH_LONG).show();
-
 				}
 			}
 		});
@@ -193,9 +185,6 @@ public class SignUPActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
-		// TODO Auto-generated method stub
 		super.onDestroy();
-
-		loginDataBaseAdapter.close();
 	}
 }

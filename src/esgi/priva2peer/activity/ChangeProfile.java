@@ -22,9 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import esgi.priva2peer.R;
-import esgi.priva2peer.communication.UserSessionManager;
+import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
-import esgi.priva2peer.data.LoginDataBaseAdapter;
 
 public class ChangeProfile extends Activity
 {
@@ -33,7 +32,6 @@ public class ChangeProfile extends Activity
 	final Context context = this;
 
 	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName;
-	LoginDataBaseAdapter loginDataBaseAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

@@ -21,11 +21,11 @@ public class Client implements Runnable
 
 		try
 		{
-			String pseudo = "stephen1";
+			String pseudo = "stephen";
 			ClientInfo cli = new ClientInfo(pseudo);
 			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 			DatagramSocket clientSocket = new DatagramSocket();
-			InetAddress IPAddress = InetAddress.getByName("192.168.0.26");
+			InetAddress IPAddress = InetAddress.getByName("10.42.214.73");
 			// InetAddress IPAddress = cli.clientAdress;
 			byte[] sendData = new byte[1024];
 			byte[] receiveData = new byte[1024];

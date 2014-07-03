@@ -1,7 +1,7 @@
 //
 //
 
-package esgi.priva2peer.communication;
+package esgi.priva2peer;
 
 import java.util.HashMap;
 import android.annotation.SuppressLint;
