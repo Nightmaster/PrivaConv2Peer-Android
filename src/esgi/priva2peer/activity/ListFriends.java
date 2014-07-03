@@ -88,14 +88,14 @@ public class ListFriends extends Activity
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
 
-			Toast.makeText(getApplicationContext(), SetServerString, Toast.LENGTH_LONG).show();
 			JSONObject friend_Object = new JSONObject(SetServerString);
 			String friends = friend_Object.get("friends").toString();
 			String[] parts = friends.split("\"");
 			Log.d("liste damis", friends);
 
 			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_1", parts[3]).commit();
-			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_2", parts[10]).commit();
+			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_2", parts[9]).commit();
+			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_3", parts[15]).commit();
 
 			JSONObject askfriend_Object = new JSONObject(SetServerString);
 			String askfriend = askfriend_Object.get("askFriend").toString();
