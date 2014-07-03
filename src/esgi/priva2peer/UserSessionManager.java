@@ -30,7 +30,7 @@ public class UserSessionManager
 	@SuppressLint("CommitPrefEdits")
 	public UserSessionManager(Context context)
 	{
-		this._context = context;
+		_context = context;
 		pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
 		editor = pref.edit();
 	}
