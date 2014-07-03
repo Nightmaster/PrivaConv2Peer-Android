@@ -18,7 +18,7 @@ public class Server implements Runnable
 		System.out.println("SERVER STARTED");
 		try
 		{
-			serverSocket = new DatagramSocket(1112);
+			serverSocket = new DatagramSocket(1111);
 
 			byte[] receiveData = new byte[1024];
 			byte[] sendData = new byte[1024];

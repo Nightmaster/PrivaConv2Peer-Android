@@ -12,7 +12,6 @@ import esgi.priva2peer.R;
  */
 public class MainActivity extends TabActivity
 {
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -21,18 +20,18 @@ public class MainActivity extends TabActivity
 
 		TabHost tabHost = getTabHost();
 
-		TabSpec loginspec = tabHost.newTabSpec("Login");
-		loginspec.setIndicator("Login");
+		TabSpec loginspec = tabHost.newTabSpec("Accueil");
+		loginspec.setIndicator("Accueil");
 		Intent loginIntent = new Intent(this, Home.class);
 		loginspec.setContent(loginIntent);
 
-		TabSpec friendspec = tabHost.newTabSpec("Friends");
-		friendspec.setIndicator("Friends");
+		TabSpec friendspec = tabHost.newTabSpec("Liste d'amis");
+		friendspec.setIndicator("Liste d'amis");
 		Intent friendIntent = new Intent(this, ListFriends.class);
 		friendspec.setContent(friendIntent);
 
-		TabSpec chatspec = tabHost.newTabSpec("Chat");
-		chatspec.setIndicator("Chat");
+		TabSpec chatspec = tabHost.newTabSpec("Conversation");
+		chatspec.setIndicator("Conversation");
 		Intent chatIntent = new Intent(this, ChatActivity.class);
 		chatspec.setContent(chatIntent);
 

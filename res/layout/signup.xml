@@ -97,7 +97,7 @@ android:layout_height="wrap_content">
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
-        android:hint="Create Account" />
+        android:hint="Création" />
 
 </LinearLayout>
 </ScrollView>

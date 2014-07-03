@@ -25,7 +25,7 @@ public class Client implements Runnable
 			ClientInfo cli = new ClientInfo(pseudo);
 			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 			DatagramSocket clientSocket = new DatagramSocket();
-			InetAddress IPAddress = InetAddress.getByName("10.42.214.73");
+			InetAddress IPAddress = InetAddress.getByName("10.66.126.173");
 			// InetAddress IPAddress = cli.clientAdress;
 			byte[] sendData = new byte[1024];
 			byte[] receiveData = new byte[1024];
@@ -41,7 +41,7 @@ public class Client implements Runnable
 						sb.append(cli.strName + " : ");
 						sb.append(message.getMessage());
 						sendData = sb.toString().getBytes();
-						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1112);
+						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1111);
 						clientSocket.send(sendPacket);
 					}
 				}
