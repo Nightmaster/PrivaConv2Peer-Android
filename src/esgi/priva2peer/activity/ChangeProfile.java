@@ -100,7 +100,6 @@ public class ChangeProfile extends Activity
 				}
 				else
 				{
-
 					HttpClient Client = new DefaultHttpClient();
 					try
 					{
@@ -144,8 +143,6 @@ public class ChangeProfile extends Activity
 
 						String SetServerString = "";
 						SetServerString = Client.execute(httpget, responseHandler);
-						Log.i("json response", SetServerString);
-						Log.i("json response", URL);
 					}
 					catch (Exception ex)
 					{
@@ -163,7 +160,6 @@ public class ChangeProfile extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.layout.change_profile, menu);
 		return true;
 	}

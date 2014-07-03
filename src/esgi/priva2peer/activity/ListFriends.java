@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
+import esgi.priva2peer.communication.Connexion;
 import esgi.priva2peer.communication.UserSessionManager;
 import esgi.priva2peer.data.Constants;
 
@@ -67,6 +68,9 @@ public class ListFriends extends Activity
 
 		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
 
+		Connexion con = new Connexion();
+		String num = con.getLocalIpAddress();
+		Toast.makeText(getApplicationContext(), num, Toast.LENGTH_LONG).show();
 		btnAddFriends = (Button) findViewById(R.id.buttonAddFriends);
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
 		listfriends = (ListView) findViewById(R.id.friends_row);
@@ -77,22 +81,21 @@ public class ListFriends extends Activity
 		{
 			HttpGet httpget = new HttpGet(URL);
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
-
 			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
 			{
 				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
 			}
-			// HttpResponse responseGet = Client.execute(httpget);
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
 
-			Log.d("json response", SetServerString);
+			Toast.makeText(getApplicationContext(), SetServerString, Toast.LENGTH_LONG).show();
 			JSONObject friend_Object = new JSONObject(SetServerString);
 			String friends = friend_Object.get("friends").toString();
 			String[] parts = friends.split("\"");
 			Log.d("liste damis", friends);
 
 			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_1", parts[3]).commit();
+			PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_2", parts[10]).commit();
 
 			JSONObject askfriend_Object = new JSONObject(SetServerString);
 			String askfriend = askfriend_Object.get("askFriend").toString();
@@ -345,7 +348,7 @@ public class ListFriends extends Activity
 			Log.d("liste", "Fail!");
 		}
 
-		String[] listeStrings = {PreferenceManager.getDefaultSharedPreferences(context).getString("friend_1", "")};
+		String[] listeStrings = {PreferenceManager.getDefaultSharedPreferences(context).getString("friend_1", ""), PreferenceManager.getDefaultSharedPreferences(context).getString("friend_2", "")};
 		listfriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listeStrings));
 
 		btnAddFriends.setOnClickListener(new View.OnClickListener()

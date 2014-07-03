@@ -58,7 +58,6 @@ public class Home extends Activity
 		btnSignIn = (Button) findViewById(R.id.buttonSignIN);
 		btnSignUp = (Button) findViewById(R.id.buttonSignUP);
 		btnLogout = (Button) findViewById(R.id.btnLogout);
-		content = (TextView) findViewById(R.id.content);
 
 		btnSignUp.setOnClickListener(new View.OnClickListener()
 		{

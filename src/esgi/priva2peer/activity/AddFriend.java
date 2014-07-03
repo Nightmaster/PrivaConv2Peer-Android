@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.Connexion;
@@ -25,7 +24,6 @@ import esgi.priva2peer.data.Constants;
 public class AddFriend extends Activity
 {
 	EditText UserName;
-	TextView content;
 	final Context context = this;
 
 	Button SearchMail;
@@ -40,7 +38,6 @@ public class AddFriend extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_friend);
 
-		content = (TextView) findViewById(R.id.content);
 		UserName = (EditText) findViewById(R.id.userName);
 		SearchMail = (Button) findViewById(R.id.SearchMail);
 
@@ -93,12 +90,9 @@ public class AddFriend extends Activity
 
 						String SetServerString = "";
 						SetServerString = Client.execute(httpget, responseHandler);
-						content.setText(SetServerString);
 					}
 					catch (Exception ex)
-					{
-						content.setText("Fail!");
-					}
+					{}
 
 				}
 			}
