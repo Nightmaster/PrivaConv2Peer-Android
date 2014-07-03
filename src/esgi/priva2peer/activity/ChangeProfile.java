@@ -25,6 +25,9 @@ import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
 
+/**
+ * @author Bruno Gb
+ */
 public class ChangeProfile extends Activity
 {
 

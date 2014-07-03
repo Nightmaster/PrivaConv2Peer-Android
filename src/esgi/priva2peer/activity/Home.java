@@ -28,6 +28,9 @@ import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
 import esgi.priva2peer.data.HTTPClients;
 
+/**
+ * @author Bruno Gb
+ */
 public class Home extends Activity
 {
 	protected static final String LOGTAG = null;

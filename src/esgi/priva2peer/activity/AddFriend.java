@@ -21,6 +21,9 @@ import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.data.Constants;
 
+/**
+ * @author Bruno Gb
+ */
 public class AddFriend extends Activity
 {
 	EditText UserName;

@@ -7,6 +7,9 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import esgi.priva2peer.R;
 
+/**
+ * @author Bruno Gb
+ */
 public class MainActivity extends TabActivity
 {
 	/** Called when the activity is first created. */

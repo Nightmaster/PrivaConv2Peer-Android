@@ -1,6 +1,3 @@
-//
-//
-
 package esgi.priva2peer;
 
 import java.util.HashMap;
@@ -11,6 +8,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import esgi.priva2peer.activity.Home;
 
+/**
+ * @author Bruno Gb
+ */
 public class UserSessionManager
 {
 

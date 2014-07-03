@@ -19,7 +19,7 @@ android:layout_height="wrap_content">
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:padding="15dip"
-        android:text="Friends list"
+        android:text="Liste d'ami"
         android:textSize="18dip" />
 
     <Button
@@ -27,7 +27,7 @@ android:layout_height="wrap_content">
         style="?android:attr/buttonStyleSmall"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Change Profile" />
+        android:text="Changer Profil" />
     </LinearLayout>
 
     <ListView
@@ -42,7 +42,7 @@ android:layout_height="wrap_content">
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="AddFriends"
-        android:text="Add Friends" />
+        android:text="Ajouter" />
 
 </LinearLayout>
 </ScrollView>

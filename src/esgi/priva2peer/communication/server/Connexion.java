@@ -13,6 +13,9 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+/**
+ * @author Bruno Gb
+ */
 public class Connexion
 {
 

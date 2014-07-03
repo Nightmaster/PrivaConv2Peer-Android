@@ -10,7 +10,7 @@ android:layout_height="wrap_content">
 
     <EditText
         android:id="@+id/editTextUserName"
-        android:hint="User Name"
+        android:hint="Pseudo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <requestFocus />
@@ -18,7 +18,7 @@ android:layout_height="wrap_content">
     
        <EditText
         android:id="@+id/editTextUserMail"
-        android:hint="User Mail"
+        android:hint="Email"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <requestFocus />
@@ -28,7 +28,7 @@ android:layout_height="wrap_content">
         android:id="@+id/editTextFirstName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="First Name">
+        android:hint="Prénom">
         <requestFocus />
     </EditText>    
 
@@ -39,14 +39,14 @@ android:layout_height="wrap_content">
         android:layout_alignLeft="@+id/LastName"
         android:layout_below="@+id/LastName"
         android:ems="10"
-        android:hint="Last Name" >
+        android:hint="Nom" >
         <requestFocus />
 	</EditText>
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Mot de passe"
         android:inputType="textPassword" >
         <requestFocus />
 	</EditText>
@@ -54,7 +54,7 @@ android:layout_height="wrap_content">
         android:id="@+id/editTextConfirmPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="ConfirmPassword"
+        android:hint="Confirmation"
         android:inputType="textPassword" >
     </EditText>
 
@@ -65,7 +65,7 @@ android:layout_height="wrap_content">
         android:layout_alignLeft="@+id/ConfirmPassword"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="92dp"
-        android:text="Change Profile" />
+        android:text="Valider" />
 
 </LinearLayout>
 </ScrollView>

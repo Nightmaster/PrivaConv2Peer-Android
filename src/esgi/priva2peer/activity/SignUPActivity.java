@@ -30,6 +30,9 @@ import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.data.PasswordUtilities;
 
+/**
+ * @author Bruno Gb
+ */
 public class SignUPActivity extends Activity
 {
 	EditText editTextUserName, editTextPassword, editTextConfirmPassword, editTextUserMail, editTextFirstName, editTextLastName, securePassword, confirmSecurePassword;
@@ -66,13 +69,10 @@ public class SignUPActivity extends Activity
 			{
 				String userName = editTextUserName.getText().toString();
 				String userMail = editTextUserMail.getText().toString();
-
 				String lastName = editTextLastName.getText().toString();
 				String firstName = editTextFirstName.getText().toString();
-
 				String password = editTextPassword.getText().toString();
 				String confirmPassword = editTextConfirmPassword.getText().toString();
-
 				String SecurePassword = securePassword.getText().toString();
 				String ConfirmSecurePassword = confirmSecurePassword.getText().toString();
 

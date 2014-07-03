@@ -1,5 +1,9 @@
 package esgi.priva2peer.data;
 
+/**
+ * @author Gael B
+ */
+
 public interface Constants
 {
 	public final static String APP_NAME = "PrivaConf2Peer", ADD_USER = "Ajouter un utilisateur à votre liste", LAUNCH_CONVERSATION = "Ouvrir une nouvelle conversation", PROFIL = "Profile", DISCONNECT = "D\u00E9connnexion", ABOUT = "\u00C0 Propos", QUIT = "Quitter", HELP = "Aide";

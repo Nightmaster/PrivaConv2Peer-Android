@@ -3,6 +3,9 @@ package esgi.priva2peer.data;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+/**
+ * @author Gael B
+ */
 public class PasswordUtilities
 {
 

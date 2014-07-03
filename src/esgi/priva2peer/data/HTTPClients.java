@@ -10,6 +10,9 @@ import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 
+/**
+ * @author Bruno Gb
+ */
 public class HTTPClients
 {
 

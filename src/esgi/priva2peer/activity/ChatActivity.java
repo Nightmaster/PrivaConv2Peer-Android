@@ -19,6 +19,9 @@ import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.communication.client.Client;
 import esgi.priva2peer.communication.server.Server;
 
+/**
+ * @author Bruno Gb
+ */
 public class ChatActivity extends Activity
 {
 	UserSessionManager session;

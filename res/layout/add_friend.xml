@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="57dp"
-        android:hint="Add Friend :" />
+        android:hint="Ajouter un contact :" />
 
     <EditText
         android:id="@+id/userName"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/LabelAddMail"
         android:ems="10"
-        android:hint="userName" />
+        android:hint="Pseudo" />
 
     <Button
         android:id="@+id/SearchMail"
@@ -31,6 +31,6 @@
         android:layout_alignLeft="@+id/userName"
         android:layout_below="@+id/LabelAddMail"
         android:layout_marginLeft="32dp"
-        android:hint="Add Name" />
+        android:hint="Confirmer" />
 
 </RelativeLayout>

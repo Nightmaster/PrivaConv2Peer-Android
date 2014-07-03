@@ -34,6 +34,9 @@ import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.communication.server.Connexion;
 import esgi.priva2peer.data.Constants;
 
+/**
+ * @author Bruno Gb
+ */
 public class ListFriends extends Activity
 {
 	// User Session Manager Class

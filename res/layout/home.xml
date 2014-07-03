@@ -8,18 +8,18 @@
         android:id="@+id/buttonSignIN"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-         android:text="Login" 
+         android:text="Se connecter" 
          android:onClick="signIn"/>
  
     <Button
         android:id="@+id/buttonSignUP"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Up" />
+        android:text="Créer un compte" />
     
     <Button android:id="@+id/btnLogout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Logout"/>
+        android:text="Déconnexion"/>
     
 </LinearLayout>
