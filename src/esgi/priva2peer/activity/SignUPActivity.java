@@ -10,7 +10,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
-import java.util.HashMap;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,15 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import esgi.priva2peer.R;
-import esgi.priva2peer.data.PasswordUtilities;
 
 /**
  * @author Bruno Gb
@@ -49,7 +47,6 @@ public class SignUPActivity extends Activity
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);
 		editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
 		editTextLastName = (EditText) findViewById(R.id.editTextLastName);
-
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
 		securePassword = (EditText) findViewById(R.id.SecurePassword);
@@ -77,9 +74,10 @@ public class SignUPActivity extends Activity
 				String ConfirmSecurePassword = confirmSecurePassword.getText().toString();
 
 				String spinner_crypt = spinner.getSelectedItem().toString();
-				PasswordUtilities pass = new PasswordUtilities();
-				HashMap<String, Boolean> value = PasswordUtilities.isStrongEnough(password);
-				Log.d("MyApp", "Registration success" + value);
+				// PasswordUtilities pass = new PasswordUtilities();
+				// HashMap<String, Boolean> value =
+				// PasswordUtilities.isStrongEnough(password);
+				// Log.d("MyApp", "Registration success" + value);
 				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();

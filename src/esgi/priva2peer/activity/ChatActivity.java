@@ -7,17 +7,23 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
-import esgi.priva2peer.communication.client.Client;
-import esgi.priva2peer.communication.server.Server;
 
 /**
  * @author Bruno Gb
@@ -29,6 +35,7 @@ public class ChatActivity extends Activity
 	private LinearLayout mMainLayout;
 	private EditText mMessageField;
 	private ArrayList<String> mMessages = new ArrayList<String>();
+	final Context context = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -41,8 +48,25 @@ public class ChatActivity extends Activity
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);
 
-		new Thread(new Server()).start();
-		new Thread(new Client()).start();
+		HttpClient Client = new DefaultHttpClient();
+		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
+		try
+		{
+
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+			}
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+			Log.d("liste", SetServerString);
+		}
+		catch (Exception ex)
+		{
+			Log.d("liste", "Fail! 22222");
+		}
 
 	}
 

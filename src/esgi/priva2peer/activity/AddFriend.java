@@ -44,10 +44,13 @@ public class AddFriend extends Activity
 		UserName = (EditText) findViewById(R.id.userName);
 		SearchMail = (Button) findViewById(R.id.SearchMail);
 
+		// new Thread(new Server()).start();
+
 		HttpClient Client = new DefaultHttpClient();
 		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
 		try
 		{
+
 			HttpGet httpget = new HttpGet(URL);
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
@@ -56,10 +59,11 @@ public class AddFriend extends Activity
 			}
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
+			Log.d("Json", "yes = " + SetServerString);
 		}
 		catch (Exception ex)
 		{
-			Log.d("liste", "Fail!");
+			Log.d("liste", "Fail! 22222");
 		}
 
 		SearchMail.setOnClickListener(new View.OnClickListener()

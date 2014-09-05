@@ -56,11 +56,13 @@ public class ListFriends extends Activity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friendlist);
 		Button btnAddFriends, btnchangeProfile;
 		final ListView listfriends;
 
+		// new Thread(new Server()).start();
 		// Session value
 
 		session = new UserSessionManager(getApplicationContext());
@@ -136,6 +138,7 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
+
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -146,7 +149,6 @@ public class ListFriends extends Activity
 					@Override
 					public void onClick(View v)
 					{
-
 						try
 						{
 							HttpClient client = new DefaultHttpClient();
@@ -169,6 +171,7 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
+							Log.d("liste", "Fail!");
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -216,6 +219,7 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
+							Log.d("liste", "Fail!");
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -249,6 +253,7 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
+							Log.d("liste", "Fail!");
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -296,6 +301,7 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
+							Log.d("liste", "Fail!");
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -329,6 +335,7 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
+							Log.d("liste", "Fail!");
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -339,7 +346,7 @@ public class ListFriends extends Activity
 		}
 		catch (Exception ex)
 		{
-			Log.d("liste", "Fail!");
+			// Log.d("liste", "Fail!");
 		}
 
 		String[] listeStrings = {PreferenceManager.getDefaultSharedPreferences(context).getString("friend_1", ""), PreferenceManager.getDefaultSharedPreferences(context).getString("friend_2", "")};
@@ -350,7 +357,6 @@ public class ListFriends extends Activity
 			@Override
 			public void onClick(View v)
 			{
-
 				Intent add_f_intent = new Intent(getApplicationContext(), AddFriend.class);
 				startActivity(add_f_intent);
 			}

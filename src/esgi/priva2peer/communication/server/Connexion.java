@@ -4,14 +4,14 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import android.content.Context;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import android.content.Context;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * @author Bruno Gb

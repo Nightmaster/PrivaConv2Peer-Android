@@ -5,6 +5,11 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +21,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.communication.server.Connexion;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -43,7 +44,8 @@ public class ChangeProfile extends Activity
 		setContentView(R.layout.change_profile);
 
 		session = new UserSessionManager(getApplicationContext());
-
+		Connexion con = new Connexion();
+		con.StayAlive();
 		HashMap<String, String> user = session.getUserDetails();
 		String name = user.get(UserSessionManager.KEY_NAME);
 		String email = user.get(UserSessionManager.KEY_EMAIL);

@@ -1,42 +1,42 @@
 package esgi.priva2peer.communication.server;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.util.Date;
-import esgi.priva2peer.communication.message.Message;
-import esgi.priva2peer.communication.message.MessageQueue;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import android.content.Context;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Server implements Runnable
 {
-
-	static DatagramSocket serverSocket;
-	Message mess = new Message();
+	final Context context = null;
 
 	@Override
 	public void run()
 	{
-		System.out.println("SERVER STARTED");
+
+		HttpClient Client = new DefaultHttpClient();
+		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
 		try
 		{
-			serverSocket = new DatagramSocket(1111);
 
-			byte[] receiveData = new byte[1024];
-			byte[] sendData = new byte[1024];
-			while (true)
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
 			{
-				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-				serverSocket.receive(receivePacket);
-				String s = new String(receivePacket.getData()).substring(0, receivePacket.getLength());
-				mess.setMessage(s);
-				mess.setReceiveDate(new Date());
-				MessageQueue.addMessageToPrint("stephen", mess);
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
 			}
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+			Log.d("liste", "yes server22222");
 		}
+
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Log.d("liste", "Fail!  server22222");
 		}
 
 	}
-
 }

@@ -13,7 +13,6 @@ android:layout_height="wrap_content">
         android:hint="Pseudo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <requestFocus />
     </EditText>
     
        <EditText
@@ -21,7 +20,6 @@ android:layout_height="wrap_content">
         android:hint="Email"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <requestFocus />
     </EditText>
 
      <EditText
@@ -29,7 +27,6 @@ android:layout_height="wrap_content">
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Prénom">
-        <requestFocus />
     </EditText>    
 
     <EditText
@@ -40,7 +37,6 @@ android:layout_height="wrap_content">
         android:layout_below="@+id/LastName"
         android:ems="10"
         android:hint="Nom" >
-        <requestFocus />
 	</EditText>
     <EditText
         android:id="@+id/editTextPassword"
@@ -48,7 +44,6 @@ android:layout_height="wrap_content">
         android:layout_height="wrap_content"
         android:hint="Mot de passe"
         android:inputType="textPassword" >
-        <requestFocus />
 	</EditText>
     <EditText
         android:id="@+id/editTextConfirmPassword"
