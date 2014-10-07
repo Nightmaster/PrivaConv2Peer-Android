@@ -10,7 +10,7 @@
     <string name="hello">Hello World, PrivaConv2Peer!</string>
     <string name="app_name">PrivaConv2Peer</string>
     <string name="title_activity_sign_up">SignUPActivity</string>
-    <string name="message_prompt">Message:</string>
+    <string name="message_prompt"></string>
     <string name="font_size_prompt">Font size:</string>
     <string name="add_message_button_label">Add Message</string>
     <string name="message_hint">Your Message</string>

@@ -4,6 +4,14 @@ import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -15,18 +23,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
-import esgi.priva2peer.data.HTTPClients;
 
 /**
  * @author Bruno Gb
@@ -36,7 +35,8 @@ public class Home extends Activity
 	protected static final String LOGTAG = null;
 
 	final Context context = this;
-	public static org.apache.http.cookie.Cookie cookie = null;
+	public String cookie_sessId = " ";
+	public String friends = " ";
 
 	UserSessionManager session;
 	TextView content;
@@ -80,6 +80,7 @@ public class Home extends Activity
 					if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
 					{
 						httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+						Log.d("deco ok", "ui");
 					}
 
 					String SetServerString = "";
@@ -87,6 +88,7 @@ public class Home extends Activity
 				}
 				catch (Exception ex)
 				{
+					Log.d("deco non", "n");
 					ex.printStackTrace();
 				}
 
@@ -167,14 +169,11 @@ public class Home extends Activity
 					JSONObject JSONObject = new JSONObject(SetServerString);
 					String name = JSONObject.get("user").toString();
 					String[] parts = name.split("\"");
-					Log.d("MyApp", parts[7]);
 
+					friends = SetServerString;
 					session = new UserSessionManager(getApplicationContext());
 					session.createUserLoginSession(parts[7], parts[3], parts[11], parts[15]);
 					Header[] headers = responseGet.getAllHeaders();
-
-					HTTPClients newhttp = new HTTPClients();
-					HTTPClients.getDefaultHttpClient();
 
 					for (int i = 0; i < headers.length; i++ )
 					{
@@ -185,12 +184,12 @@ public class Home extends Activity
 							String[] sess = sessId.split(";");
 							String content_sesId = sess[0];
 							PreferenceManager.getDefaultSharedPreferences(context).edit().putString("MYLABEL", content_sesId).commit();
-
+							cookie_sessId = content_sesId;
 							Log.d("sessId", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
 
 						}
 					}
-					responseGet.getEntity().consumeContent();
+					// responseGet.getEntity().consumeContent();
 
 				}
 				catch (Exception e)
@@ -206,6 +205,13 @@ public class Home extends Activity
 		});
 
 		dialog.show();
+
+		// Arrêt de SecondActivity
+		// Intent data = new Intent();
+		// data.putExtra(Home.ACCOUNT_SERVICE,
+		// Logger.getLogger(session.KEY_NAME).toString());
+		// setResult(RESULT_OK, data);
+		// finish();
 	}
 
 	@Override

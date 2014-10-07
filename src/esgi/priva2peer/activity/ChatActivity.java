@@ -1,9 +1,12 @@
 package esgi.priva2peer.activity;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +18,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -24,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.data.Constants;
 
 /**
  * @author Bruno Gb
@@ -35,6 +41,7 @@ public class ChatActivity extends Activity
 	private LinearLayout mMainLayout;
 	private EditText mMessageField;
 	private ArrayList<String> mMessages = new ArrayList<String>();
+	private TextView mMessage_prompt;
 	final Context context = this;
 
 	@Override
@@ -47,9 +54,13 @@ public class ChatActivity extends Activity
 
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);
+		mMessage_prompt = (TextView) findViewById(R.id.message_prompt);
 
+		mMessage_prompt.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("friend_selected", "defaultStringIfNothingFound"));
+		// /mMessage_prompt.setText(R.string.message_prompt);
 		HttpClient Client = new DefaultHttpClient();
-		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
+		String URL = Constants.SRV_URL + Constants.SRV_API + "GetCliIp/" + PreferenceManager.getDefaultSharedPreferences(context).getString("friend_selected", "defaultStringIfNothingFound");
+
 		try
 		{
 
@@ -61,12 +72,21 @@ public class ChatActivity extends Activity
 			}
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
-			Log.d("liste", SetServerString);
+			Log.d("chat ", "yes = " + SetServerString);
+			String[] ip_friend_selected = SetServerString.split("\"");
+			System.out.println(ip_friend_selected[5]);
 		}
 		catch (Exception ex)
 		{
-			Log.d("liste", "Fail! 22222");
+			Log.d("chat", "Fail! 22222");
 		}
+		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+		int ip = wifiInfo.getIpAddress();
+		String ipAddress = wifiIpAddress(context);
+		// Formatter.formatIpAddress(ip);
+		// Toast.makeText(getApplicationContext(), ip + ipAddress,
+		// Toast.LENGTH_LONG).show();
 
 	}
 
@@ -79,6 +99,33 @@ public class ChatActivity extends Activity
 		DatagramPacket out = new DatagramPacket(outData, outData.length, ip, 2060);
 		socket.send(out);
 		System.out.println("Send >>> ");
+	}
+
+	public String wifiIpAddress(Context context)
+	{
+		WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+		int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+
+		// Convert little-endian to big-endianif needed
+		if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN))
+		{
+			ipAddress = Integer.reverseBytes(ipAddress);
+		}
+
+		byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+
+		String ipAddressString;
+		try
+		{
+			ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+		}
+		catch (UnknownHostException ex)
+		{
+			Log.e("WIFIIP", "Unable to get host address.");
+			ipAddressString = null;
+		}
+
+		return ipAddressString;
 	}
 
 	@Override

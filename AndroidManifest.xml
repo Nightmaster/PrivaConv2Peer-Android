@@ -4,17 +4,14 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="10" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.camera" />
-    <uses-permission android:name="android.permission.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -37,10 +34,6 @@
         <activity
             android:name="esgi.priva2peer.activity.SignUPActivity"
             android:label="@string/title_activity_sign_up" >
-        </activity>
-        <activity
-            android:name="esgi.priva2peer.Session"
-            android:label="@string/title_activity_session" >
         </activity>
     </application>
 
