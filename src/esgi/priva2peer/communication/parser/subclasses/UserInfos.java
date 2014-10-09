@@ -9,8 +9,15 @@ public class UserInfos
 
 	public UserInfos(JSONObject json) throws JSONException
 	{
-		this.email = json.getString("email");
-		this.email = json.getString("email");
+		this.login = json.getString("username");
+		try
+		{
+			this.email = json.getString("email");
+		}
+		catch (JSONException e)
+		{
+			this.email = null;
+		}
 		this.name = json.getString("name");
 		this.firstname = json.getString("firstname");
 	}
@@ -33,5 +40,14 @@ public class UserInfos
 	public String getName()
 	{
 		return this.name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Login : " + this.login +
+			   ((null == this.email) ? "" : "\nEmail: " + this.email) +
+				"\nNom : " + this.name +
+				"\nPr\u00E9nom : " + this.firstname;
 	}
 }

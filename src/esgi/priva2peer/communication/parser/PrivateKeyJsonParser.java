@@ -2,23 +2,20 @@ package esgi.priva2peer.communication.parser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import esgi.priva2peer.communication.parser.subclasses.UserInfos;
 
-class ShowProfileJSONParser
+public class PrivateKeyJsonParser
 {
+	private String displayMessage = null, privateKey;
 	private boolean error;
 	private int httpCode = 200;
-	private String displayMessage = null;
-	private UserInfos profile = null;
 
 	/**
-	 * This class is made to parse the JSON returned by the server's web service
-	 * when a demand for all informations on a friend is performed
-	 * 
+	 * This class is made to parse the JSON returned by the server's web service when the private key is asked to the server
+	 *
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public ShowProfileJSONParser(JSONObject json) throws JSONException
+	PrivateKeyJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (true == this.error)
@@ -26,7 +23,7 @@ class ShowProfileJSONParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		this.profile = new UserInfos(json.getJSONObject("profile"));
+		this.privateKey = json.getString("prKey");
 	}
 
 	public String getDisplayMessage()
@@ -39,9 +36,9 @@ class ShowProfileJSONParser
 		return this.httpCode;
 	}
 
-	public UserInfos getProfile()
+	public String getPrivateKey()
 	{
-		return this.profile;
+		return this.privateKey;
 	}
 
 	public boolean isError()

@@ -3,20 +3,19 @@ package esgi.priva2peer.communication.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class PrivateKeyJSONParser
+public class AddFriendJsonParser
 {
-	private boolean error;
+	private String displayMessage = null;
+	private boolean error, invitationSent = false;
 	private int httpCode = 200;
-	private String displayMessage = null, privateKey;
 
 	/**
-	 * This class is made to parse the JSON returned by the server's web service
-	 * when the private key is asked to the server
-	 * 
+	 * This class is made to parse the JSON returned by the server's web service when a add friend action is done
+	 *
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public PrivateKeyJSONParser(JSONObject json) throws JSONException
+	AddFriendJsonParser(JSONObject json) throws JSONException
 	{
 		this.error = json.getBoolean("error");
 		if (true == this.error)
@@ -24,7 +23,8 @@ class PrivateKeyJSONParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		this.privateKey = json.getString("prKey");
+		else
+			this.invitationSent = json.getBoolean("invitationSent");
 	}
 
 	public String getDisplayMessage()
@@ -37,13 +37,13 @@ class PrivateKeyJSONParser
 		return this.httpCode;
 	}
 
-	public String getPrivateKey()
-	{
-		return this.privateKey;
-	}
-
 	public boolean isError()
 	{
 		return this.error;
+	}
+
+	public boolean isInvitationSent()
+	{
+		return this.invitationSent;
 	}
 }

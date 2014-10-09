@@ -3,67 +3,156 @@ package esgi.priva2peer.communication.parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * The factory for all JSON Parsers
+ *
+ * @author Gael B.
+ */
 public class JSONParser
 {
 	private static final String DISCONNECTION = "Disconnection", REGISTRATION = "Registration";
 
-	public static AddFriendJSONParser getAddFriendParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link AddFriendJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {AddFriendJSONParser} the add friend parser
+	 * @throws JSONException
+	 **/
+	public static AddFriendJsonParser getAddFriendParser(String json) throws JSONException
 	{
-		return new AddFriendJSONParser(json);
+		return new AddFriendJsonParser(new JSONObject(json));
 	}
 
-	public static AnswerRequestJSONParser getAnswerRequestParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link AnswerRequestJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {AnswerRequestJSONParser} the answer friend request parser
+	 * @throws JSONException
+	 **/
+	public static AnswerRequestJsonParser getAnswerRequestParser(String json) throws JSONException
 	{
-		return new AnswerRequestJSONParser(json);
+		return new AnswerRequestJsonParser(new JSONObject(json));
 	}
 
-	public static ClientIPJSONParser getClientIPParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link ClientIpJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {ClientIPJSONParser} the client IP parser
+	 * @throws JSONException
+	 **/
+	public static ClientIpJsonParser getClientIpParser(String json) throws JSONException
 	{
-		return new ClientIPJSONParser(json);
+		return new ClientIpJsonParser(new JSONObject(json));
 	}
 
-	public static ConnectionJSONParser getConnectionParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link ConnectionJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {ConnectionJSONParser} the connection parser
+	 * @throws JSONException
+	 **/
+	public static ConnectionJsonParser getConnectionParser(String json) throws JSONException
 	{
-		return new ConnectionJSONParser(json);
+		return new ConnectionJsonParser(new JSONObject(json));
 	}
 
-	public static SimpleJSONParser getDisconnectionParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link SimpleJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {SimpleJSONParser} the disconnection parser
+	 * @throws JSONException
+	 **/
+	public static SimpleJsonParser getDisconnectionParser(String json) throws JSONException
 	{
-		return new SimpleJSONParser(json, DISCONNECTION);
+		return new SimpleJsonParser(new JSONObject(json), DISCONNECTION);
 	}
 
-	public static ModifyProfileJSONParser getodifyProfileParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link ModifyProfileJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {ModifyProfileJSONParser} the modify profile parser
+	 * @throws JSONException
+	 **/
+	public static ModifyProfileJsonParser getodifyProfileParser(String json) throws JSONException
 	{
-		return new ModifyProfileJSONParser(json);
+		return new ModifyProfileJsonParser(new JSONObject(json));
 	}
 
-	public static PrivateKeyJSONParser getPrivateKeyParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link PrivateKeyJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {PrivateKeyJSONParser} the private key parser
+	 * @throws JSONException
+	 **/
+	public static PrivateKeyJsonParser getPrivateKeyParser(String json) throws JSONException
 	{
-		return new PrivateKeyJSONParser(json);
+		return new PrivateKeyJsonParser(new JSONObject(json));
 	}
 
-	public static PublicKeyJSONParser getPublicKeyParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link PublicKeyJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {PublicKeyJSONParser} the public key parser
+	 * @throws JSONException
+	 **/
+	public static PublicKeyJsonParser getPublicKeyParser(String json) throws JSONException
 	{
-		return new PublicKeyJSONParser(json);
+		return new PublicKeyJsonParser(new JSONObject(json));
 	}
 
-	public static SimpleJSONParser getRegistrationParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link SimpleJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {SimpleJSONParser} the registration parser
+	 * @throws JSONException
+	 **/
+	public static SimpleJsonParser getRegistrationParser(String json) throws JSONException
 	{
-		return new SimpleJSONParser(json, REGISTRATION);
+		return new SimpleJsonParser(new JSONObject(json), REGISTRATION);
 	}
 
-	public static SearchJSONParser getSearchParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link SearchJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {SearchJSONParser} the search parser
+	 * @throws JSONException
+	 **/
+	public static SearchJsonParser getSearchParser(String json) throws JSONException
 	{
-		return new SearchJSONParser(json);
+		return new SearchJsonParser(new JSONObject(json));
 	}
 
-	public static ShowProfileJSONParser getShowProfileParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link ShowProfileJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {ShowProfileJSONParser} the show profile parser
+	 * @throws JSONException
+	 **/
+	public static ShowProfileJsonParser getShowProfileParser(String json) throws JSONException
 	{
-		return new ShowProfileJSONParser(json);
+		return new ShowProfileJsonParser(new JSONObject(json));
 	}
 
-	public static StayAliveJSONParser getStayAliveParser(JSONObject json) throws JSONException
+	/**
+	 * Create an instance of {@link StayAliveJsonParser}
+	 *
+	 * @param json {JSONObject}: the JSON returned by the web service on this action
+	 * @return {StayAliveJSONParser} the stay alive parser
+	 * @throws JSONException
+	 **/
+	public static StayAliveJsonParser getStayAliveParser(String json) throws JSONException
 	{
-		return new StayAliveJSONParser(json);
+		return new StayAliveJsonParser(new JSONObject(json));
 	}
 }

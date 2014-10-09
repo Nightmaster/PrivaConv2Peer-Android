@@ -1,32 +1,31 @@
 package esgi.priva2peer.communication.parser;
 
+import esgi.priva2peer.communication.parser.subclasses.Friend;
+import esgi.priva2peer.communication.parser.subclasses.UserInfos;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import esgi.priva2peer.communication.parser.subclasses.Friend;
-import esgi.priva2peer.communication.parser.subclasses.UserInfos;
 
-class StayAliveJSONParser
+public class ConnectionJsonParser
 {
-	private boolean error, statusOk;
-	private int httpCode = 200, validity;
-	private String displayMessage = null;
 	private String[] askFriendship;
-	private UserInfos userInfos;
+	private String displayMessage = null;
+	private boolean error, connection;
 	private Friend[] fl;
+	private UserInfos userInfos;
+	private int validity, httpCode = 200;
 
 	/**
-	 * This class is made to parse the JSON returned by the server's web service
-	 * when a stay alive action is performed
-	 * 
+	 * This class is made to parse the JSON returned by the server's web service when a connection action is done
+	 *
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
-	public StayAliveJSONParser(JSONObject json) throws JSONException
+	ConnectionJsonParser(JSONObject json) throws JSONException
 	{
 		JSONArray ask = null, fList = null;
 		this.error = json.getBoolean("error");
-		if (true == this.error)
+		if (this.error)
 		{
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
@@ -43,8 +42,7 @@ class StayAliveJSONParser
 			for (int i = 0; i < fList.length(); i++ )
 				this.fl[i] = new Friend(fList.getJSONObject(i));
 		}
-		this.statusOk = json.getBoolean("stayAlive");
-		this.validity = json.getInt("validity");
+		this.connection = json.getBoolean("connection");
 	}
 
 	public String[] getAskList()
@@ -77,13 +75,13 @@ class StayAliveJSONParser
 		return this.validity;
 	}
 
+	public boolean isConnectionValidated()
+	{
+		return this.connection;
+	}
+
 	public boolean isError()
 	{
 		return this.error;
-	}
-
-	public boolean isStatusOk()
-	{
-		return this.statusOk;
 	}
 }
