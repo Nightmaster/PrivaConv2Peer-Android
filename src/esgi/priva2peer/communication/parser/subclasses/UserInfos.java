@@ -9,7 +9,14 @@ public class UserInfos
 
 	public UserInfos(JSONObject json) throws JSONException
 	{
-		this.login = json.getString("username");
+		try
+		{
+			this.login = json.getString("username");
+		}
+		catch (JSONException e)
+		{
+			this.login = json.getString("login");
+		}
 		try
 		{
 			this.email = json.getString("email");
@@ -45,9 +52,6 @@ public class UserInfos
 	@Override
 	public String toString()
 	{
-		return "Login : " + this.login +
-			   ((null == this.email) ? "" : "\nEmail: " + this.email) +
-				"\nNom : " + this.name +
-				"\nPr\u00E9nom : " + this.firstname;
+		return "Login : " + this.login + ((null == this.email) ? "" : "\nEmail: " + this.email) + "\nNom : " + this.name + "\nPr\u00E9nom : " + this.firstname;
 	}
 }

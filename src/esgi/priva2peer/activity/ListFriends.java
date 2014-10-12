@@ -24,14 +24,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.communication.parser.JSONParser;
+import esgi.priva2peer.communication.parser.StayAliveJsonParser;
+import esgi.priva2peer.communication.parser.subclasses.Friend;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -66,13 +67,11 @@ public class ListFriends extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friendlist);
 		Button btnAddFriends, btnchangeProfile;
-		final ListView listfriends;
+		ListView listfriends;
 
 		Log.d("ddsqd", getIpAddress()); // adresse local
 		Home ui = new Home();
-
 		session = new UserSessionManager(getApplicationContext());
-
 		btnAddFriends = (Button) findViewById(R.id.buttonAddFriends);
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
 
@@ -80,7 +79,6 @@ public class ListFriends extends Activity
 		String d_ami1, friend_1, friend_2, friend_3, friend_4, friend_5, friend_6 = null;
 		String state_1, state_2, state_3, state_4, state_5;
 		HttpClient Client = new DefaultHttpClient();
-		Log.d("json", ui.cookie_sessId);
 		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
 		try
 		{
@@ -92,58 +90,46 @@ public class ListFriends extends Activity
 			}
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
-			Log.d("jsonlist", SetServerString);
-			Log.d("preferences", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+			StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(SetServerString);
 
-			// Log.d("Json", "yes = " + SetServerString);
+			Friend[] fl = stAlJson.getFriendList();
+			final String[] str = new String[fl.length];
+			final Boolean[] state = new Boolean[fl.length];
+			Integer[] imageId = new Integer[fl.length];
+			for (int i = 0; i < state.length; i++ )
+			{
+				str[i] = fl[i].getUsername();
+				state[i] = fl[i].isConnected();
+				imageId[i] = state[i] ? R.drawable.greenstar : R.drawable.redstar;
+			}
+
+			CustomList adapter = new CustomList(ListFriends.this, str, imageId);
+			ListView friends_row = (ListView) findViewById(R.id.friends_row);
+			friends_row.setAdapter(adapter);
+			friends_row.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+				{
+					if (state[position] == true)
+					{
+						Intent add_f_intent = new Intent(view.getContext(), ChatActivity.class);
+						startActivity(add_f_intent);
+
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext(), str[position] + " non connecté", Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
 
 			JSONObject friend_Object = new JSONObject(SetServerString);
 			String friends = friend_Object.get("friends").toString();
 			String[] parts = friends.split("\"");
-
-			Log.d("fdgdsgf", parts[3]);
-
-			friend_1 = parts[3];
-			friend_2 = parts[9];
-			friend_3 = parts[15];
-			String un, deux, trois = "";
-			Log.d("chelou", "2");
-			if (parts[6].contains("true"))
-			{
-				un = "en ligne";
-			}
-			else
-			{
-				un = "deco";
-			}
-			if (parts[12].contains("true"))
-			{
-				deux = "en ligne";
-
-			}
-			else
-			{
-				deux = "deco";
-			}
-			if (parts[18].contains("true"))
-			{
-				trois = "en ligne";
-
-			}
-			else
-			{
-				trois = "deco";
-			}
-			Log.d("fdf", friend_1);
-
-			String[] listeStrings = {friend_1 + " " + un, friend_2 + " " + deux, friend_3 + " " + trois};
-			listfriends.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listeStrings));
-
 			String askfriend = friend_Object.get("askFriend").toString();
 			String[] a_friend = askfriend.split("\"");
 			d_ami1 = a_friend[1];
-
-			Log.d("vfdjiksf", a_friend[1]);
 			if (d_ami1 != "")
 			{
 				final Dialog dialog = new Dialog(context);
@@ -151,7 +137,7 @@ public class ListFriends extends Activity
 				dialog.setTitle("New friends?");
 				final String user = d_ami1;
 				TextView text = (TextView) dialog.findViewById(R.id.text);
-				text.setText(a_friend[1] + " te demande en ami.");
+				text.setText(user + " te demande en ami.");
 
 				Button ConfirmButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
 				Button RefusedButton = (Button) dialog.findViewById(R.id.dialogButtonNOK);
@@ -223,16 +209,9 @@ public class ListFriends extends Activity
 				dialog.show();
 			}
 
-			state_1 = parts[6];
-			state_2 = parts[12];
-			state_3 = parts[18];
-			state_4 = parts[24];
-
 		}
 		catch (Exception ex)
-		{
-			Log.d("first try", "Fail!");
-		}
+		{}
 
 		btnAddFriends.setOnClickListener(new View.OnClickListener()
 		{
@@ -252,70 +231,31 @@ public class ListFriends extends Activity
 				startActivity(add_f_intent);
 			}
 		});
-		listfriends.setOnItemClickListener(new OnItemClickListener()
-		{
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-			{
-
-				friend_selected = (String) ((TextView) view).getText();
-				String[] friend = friend_selected.split(" ");
-				PreferenceManager.getDefaultSharedPreferences(context).edit().putString("friend_selected", friend[0]).commit();
-
-				if (friend[1].contains("deco"))
-				{
-					Toast.makeText(getApplicationContext(), "Contact non connecté", Toast.LENGTH_SHORT).show();
-				}
-				else
-				{
-					Intent add_f_intent = new Intent(view.getContext(), ChatActivity.class);
-					startActivity(add_f_intent);
-				}
-
-			}
-		});
-
-	}
-
-	public static String rechercheMotCle(String texte, String keyword)
-	{
-		String resultat = "";
-		int count = 0;
-		int index = texte.indexOf(keyword);
-		// incrémenter le compteur à chaque fois qu'une occurence est trouvée
-		while (index != -1)
-		{
-			++count;
-			resultat = resultat + index + " ";
-			index = texte.indexOf(keyword, index + 1);
-		}
-		// Formatage de résultat
-		resultat = "" + count;
-		return resultat;
 	}
 
 	public static String getIpAddress()
 	{
+		String ip = null;
 		try
 		{
 			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();)
 			{
 				NetworkInterface intf = en.nextElement();
 				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
+
 				{
 					InetAddress inetAddress = enumIpAddr.nextElement();
 					if (!inetAddress.isLoopbackAddress())
 					{
+						ip = inetAddress.getHostAddress().toString();
 						return inetAddress.getHostAddress().toString();
 					}
 				}
 			}
 		}
 		catch (SocketException e)
-		{
-			// Log.e(Constants.LOG_TAG, e.getMessage(), e);
-		}
-		return null;
+		{}
+		return ip;
 	}
 }

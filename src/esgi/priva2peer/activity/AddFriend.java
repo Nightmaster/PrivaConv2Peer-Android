@@ -19,6 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import esgi.priva2peer.R;
+import esgi.priva2peer.communication.parser.JSONParser;
+import esgi.priva2peer.communication.parser.StayAliveJsonParser;
+import esgi.priva2peer.communication.parser.subclasses.Friend;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -60,6 +63,11 @@ public class AddFriend extends Activity
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
 			Log.d("Json", "yes = " + SetServerString);
+
+			StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(SetServerString);
+			stAlJson.getFriendList();
+			for (Friend friend : stAlJson.getFriendList())
+				Log.d("dfefd", friend.getUsername() + "  espace  " + friend.isConnected());
 		}
 		catch (Exception ex)
 		{

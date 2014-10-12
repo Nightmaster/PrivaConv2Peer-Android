@@ -144,8 +144,7 @@ public class ChangeProfile extends Activity
 							httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
 						}
 
-						String SetServerString = "";
-						SetServerString = Client.execute(httpget, responseHandler);
+						String SetServerString = Client.execute(httpget, responseHandler);
 					}
 					catch (Exception ex)
 					{

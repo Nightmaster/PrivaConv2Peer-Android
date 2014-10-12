@@ -12,7 +12,6 @@ import esgi.priva2peer.R;
  */
 public class MainActivity extends TabActivity
 {
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{

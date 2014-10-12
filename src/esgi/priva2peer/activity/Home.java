@@ -189,6 +189,7 @@ public class Home extends Activity
 
 						}
 					}
+
 					// responseGet.getEntity().consumeContent();
 
 				}

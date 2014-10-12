@@ -7,7 +7,7 @@ import esgi.priva2peer.communication.parser.subclasses.UserInfos;
 
 /**
  * Parse search JSON
- *
+ * 
  * @author Gael B.
  **/
 public class SearchJsonParser
@@ -18,23 +18,31 @@ public class SearchJsonParser
 	private UserInfos[] profiles = null;
 
 	/**
-	 * This class is made to parse the JSON returned by the server's web service when a search is performed
-	 *
+	 * This class is made to parse the JSON returned by the server's web service
+	 * when a search is performed
+	 * 
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
 	SearchJsonParser(JSONObject json) throws JSONException
 	{
-		JSONArray profiles = json.getJSONArray("profiles");
-		this.profiles = new UserInfos[profiles.length()];
 		this.error = json.getBoolean("error");
 		if (this.error)
 		{
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		for (int i = 0; i < profiles.length(); i++ )
-			this.profiles[i] = new UserInfos(profiles.getJSONObject(i));
+		if (json.isNull("profiles"))
+		{
+			this.profiles = null;
+		}
+		else
+		{
+			JSONArray profiles = json.getJSONArray("profiles");
+			this.profiles = new UserInfos[profiles.length()];
+			for (int i = 0; i < profiles.length(); i++ )
+				this.profiles[i] = new UserInfos(profiles.getJSONObject(i));
+		}
 	}
 
 	public String getDisplayMessage()

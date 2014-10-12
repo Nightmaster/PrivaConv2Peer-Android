@@ -29,6 +29,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.communication.parser.JSONParser;
+import esgi.priva2peer.communication.parser.StayAliveJsonParser;
+import esgi.priva2peer.communication.parser.subclasses.Friend;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -75,6 +78,11 @@ public class ChatActivity extends Activity
 			Log.d("chat ", "yes = " + SetServerString);
 			String[] ip_friend_selected = SetServerString.split("\"");
 			System.out.println(ip_friend_selected[5]);
+
+			StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(SetServerString);
+			stAlJson.getFriendList();
+			for (Friend friend : stAlJson.getFriendList())
+				System.out.println(friend.getUsername());
 		}
 		catch (Exception ex)
 		{
