@@ -27,11 +27,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
-import esgi.priva2peer.communication.parser.JSONParser;
-import esgi.priva2peer.communication.parser.StayAliveJsonParser;
-import esgi.priva2peer.communication.parser.subclasses.Friend;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -59,10 +57,12 @@ public class ChatActivity extends Activity
 		mMessageField = (EditText) findViewById(R.id.message_field);
 		mMessage_prompt = (TextView) findViewById(R.id.message_prompt);
 
-		mMessage_prompt.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("friend_selected", "defaultStringIfNothingFound"));
+		Bundle extras = getIntent().getExtras();
+		String selected_item = extras.getString("selected_item");
+		mMessage_prompt.setText(selected_item);
 		// /mMessage_prompt.setText(R.string.message_prompt);
 		HttpClient Client = new DefaultHttpClient();
-		String URL = Constants.SRV_URL + Constants.SRV_API + "GetCliIp/" + PreferenceManager.getDefaultSharedPreferences(context).getString("friend_selected", "defaultStringIfNothingFound");
+		String URL = Constants.SRV_URL + Constants.SRV_API + "GetCliIp/" + selected_item;
 
 		try
 		{
@@ -75,26 +75,17 @@ public class ChatActivity extends Activity
 			}
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
-			Log.d("chat ", "yes = " + SetServerString);
 			String[] ip_friend_selected = SetServerString.split("\"");
-			System.out.println(ip_friend_selected[5]);
+			Log.d("kjdbsf", ip_friend_selected[5]);
 
-			StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(SetServerString);
-			stAlJson.getFriendList();
-			for (Friend friend : stAlJson.getFriendList())
-				System.out.println(friend.getUsername());
 		}
 		catch (Exception ex)
-		{
-			Log.d("chat", "Fail! 22222");
-		}
+		{}
 		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
 		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
 		int ip = wifiInfo.getIpAddress();
 		String ipAddress = wifiIpAddress(context);
-		// Formatter.formatIpAddress(ip);
-		// Toast.makeText(getApplicationContext(), ip + ipAddress,
-		// Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), ip + " /" + ipAddress, Toast.LENGTH_LONG).show();
 
 	}
 

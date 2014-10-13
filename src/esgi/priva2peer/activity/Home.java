@@ -23,8 +23,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.communication.parser.ConnectionJsonParser;
+import esgi.priva2peer.communication.parser.JSONParser;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -88,7 +91,6 @@ public class Home extends Activity
 				}
 				catch (Exception ex)
 				{
-					Log.d("deco non", "n");
 					ex.printStackTrace();
 				}
 
@@ -190,7 +192,21 @@ public class Home extends Activity
 						}
 					}
 
-					// responseGet.getEntity().consumeContent();
+					ConnectionJsonParser stAlJson = JSONParser.getConnectionParser(SetServerString);
+					if (stAlJson.isConnectionValidated())
+					{
+
+						Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
+						list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(list_f_intent);
+						dialog.dismiss();
+
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext(), "Login ou mot de passe non valide", Toast.LENGTH_LONG).show();
+
+					}
 
 				}
 				catch (Exception e)
@@ -198,26 +214,35 @@ public class Home extends Activity
 					e.printStackTrace();
 				}
 
-				Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
-				list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(list_f_intent);
-				dialog.dismiss();
 			}
 		});
 
 		dialog.show();
-
-		// Arrêt de SecondActivity
-		// Intent data = new Intent();
-		// data.putExtra(Home.ACCOUNT_SERVICE,
-		// Logger.getLogger(session.KEY_NAME).toString());
-		// setResult(RESULT_OK, data);
-		// finish();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
+		session.logoutUser();
+		HttpClient Client = new DefaultHttpClient();
+		String URL = Constants.SRV_URL + Constants.SRV_API + "disconnect";
+		try
+		{
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+				Log.d("deco ok", "ui");
+			}
+
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		super.onDestroy();
 	}
 }

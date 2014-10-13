@@ -113,9 +113,9 @@ public class ListFriends extends Activity
 				{
 					if (state[position] == true)
 					{
-						Intent add_f_intent = new Intent(view.getContext(), ChatActivity.class);
-						startActivity(add_f_intent);
-
+						Intent select_f_intent = new Intent(view.getContext(), ChatActivity.class);
+						select_f_intent.putExtra("selected_item", str[position].toString());
+						startActivity(select_f_intent);
 					}
 					else
 					{
