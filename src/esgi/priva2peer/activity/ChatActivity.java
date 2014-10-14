@@ -7,7 +7,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.client.HttpClient;
@@ -27,7 +29,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
@@ -35,6 +36,7 @@ import esgi.priva2peer.data.Constants;
 /**
  * @author Bruno Gb
  */
+@SuppressLint("SimpleDateFormat")
 public class ChatActivity extends Activity
 {
 	UserSessionManager session;
@@ -103,7 +105,6 @@ public class ChatActivity extends Activity
 		WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
 		int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
 
-		// Convert little-endian to big-endianif needed
 		if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN))
 		{
 			ipAddress = Integer.reverseBytes(ipAddress);
@@ -143,7 +144,10 @@ public class ChatActivity extends Activity
 
 		for (String message : mMessages)
 		{
-			addMessage(name + " says : " + message);
+			Date d = new Date();
+			SimpleDateFormat f = new SimpleDateFormat("HHmmss");
+			String s = f.format(d);
+			addMessage(name + " (" + s + ")" + " : " + message);
 
 		}
 
@@ -158,8 +162,11 @@ public class ChatActivity extends Activity
 		String name = user.get(UserSessionManager.KEY_NAME);
 		if (!message.isEmpty())
 		{
-			mMessages.add(name + " says : " + message);
-			addMessage(name + " says : " + message);
+			Date d = new Date();
+			SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+			String s = f.format(d);
+			addMessage(name + " (" + s + ")" + " : " + message);
+			mMessages.add(name + " (" + s + ")" + " : " + message);
 
 		}
 	}

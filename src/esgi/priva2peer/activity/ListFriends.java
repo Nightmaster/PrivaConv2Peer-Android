@@ -69,14 +69,11 @@ public class ListFriends extends Activity
 		Button btnAddFriends, btnchangeProfile;
 		ListView listfriends;
 
-		Log.d("ddsqd", getIpAddress()); // adresse local
 		Home ui = new Home();
 		session = new UserSessionManager(getApplicationContext());
 		btnAddFriends = (Button) findViewById(R.id.buttonAddFriends);
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
-
-		String d_ami1, friend_1, friend_2, friend_3, friend_4, friend_5, friend_6 = null;
-		String state_1, state_2, state_3, state_4, state_5;
+		String d_ami1 = null;
 		HttpClient Client = new DefaultHttpClient();
 		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
 		try
@@ -90,13 +87,15 @@ public class ListFriends extends Activity
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
 			StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(SetServerString);
-
+			System.out.println(SetServerString);
 			Friend[] fl = stAlJson.getFriendList();
+			Log.d("fds", "longueur" + fl.length);
 			final String[] str = new String[fl.length];
 			final Boolean[] state = new Boolean[fl.length];
 			Integer[] imageId = new Integer[fl.length];
 			for (int i = 0; i < state.length; i++ )
 			{
+				Log.d("for", fl[i].getUsername() + fl[i].isConnected());
 				str[i] = fl[i].getUsername();
 				state[i] = fl[i].isConnected();
 				imageId[i] = state[i] ? R.drawable.greenstar : R.drawable.redstar;
@@ -210,7 +209,9 @@ public class ListFriends extends Activity
 
 		}
 		catch (Exception ex)
-		{}
+		{
+			Log.d("dksjhf", "DEAD");
+		}
 
 		btnAddFriends.setOnClickListener(new View.OnClickListener()
 		{

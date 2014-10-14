@@ -161,6 +161,7 @@ public class Home extends Activity
 
 					String URL = Constants.SRV_URL + Constants.SRV_API + "connect?" + login + editTextUserName.getText().toString() + "&pw=" + hashtext;
 					HttpClient client = new DefaultHttpClient();
+					Log.d("fd", URL);
 					ResponseHandler<String> responseHandler = new BasicResponseHandler();
 					HttpGet get = new HttpGet(URL);
 					get.setHeader("Cookie", "sessId");

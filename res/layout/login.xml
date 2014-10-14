@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:hint="Pseudo ou Email"
         android:ems="10" 
-        android:text="" />
+        android:text="brunogb" />
        
  
     <EditText
@@ -20,7 +20,7 @@
         android:ems="10"
         android:inputType="textPassword"
         android:hint="Mot de passe" 
-        android:text=""/>
+        android:text="djangapass"/>
  
     <Button
         android:id="@+id/buttonSignIn"
