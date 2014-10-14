@@ -221,6 +221,30 @@ public class Home extends Activity
 	}
 
 	@Override
+	protected void onPause()
+	{
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+	}
+
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+	}
+
+	@Override
 	protected void onDestroy()
 	{
 		session.logoutUser();
@@ -244,8 +268,6 @@ public class Home extends Activity
 		}
 		catch (Exception ex)
 		{
-			Log.d("deco non", "non");
-
 			ex.printStackTrace();
 		}
 		super.onDestroy();

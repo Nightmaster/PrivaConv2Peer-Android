@@ -67,7 +67,6 @@ public class UserSessionManager
 		user.put(KEY_FirstName, pref.getString(KEY_FirstName, null));
 		user.put(KEY_LastName, pref.getString(KEY_LastName, null));
 
-		// return user
 		return user;
 	}
 

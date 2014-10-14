@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
-import esgi.priva2peer.communication.server.Connexion;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -44,13 +43,7 @@ public class ChangeProfile extends Activity
 		setContentView(R.layout.change_profile);
 
 		session = new UserSessionManager(getApplicationContext());
-		Connexion con = new Connexion();
-		con.StayAlive();
 		HashMap<String, String> user = session.getUserDetails();
-		String name = user.get(UserSessionManager.KEY_NAME);
-		String email = user.get(UserSessionManager.KEY_EMAIL);
-		String last_n = user.get(UserSessionManager.KEY_FirstName);
-		String first_n = user.get(UserSessionManager.KEY_LastName);
 
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);

@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.data.Constants;
@@ -61,6 +63,16 @@ public class ChatActivity extends Activity
 
 		Bundle extras = getIntent().getExtras();
 		String selected_item = extras.getString("selected_item");
+		if (selected_item != "")
+		{
+			mMessage_prompt.setText(selected_item + " ");
+		}
+		else
+		{
+			Toast.makeText(getApplicationContext(), "Aucun ami selectionné", Toast.LENGTH_LONG).show();
+			Intent list_f_intent = new Intent(getApplicationContext(), ListFriends.class);
+			startActivity(list_f_intent);
+		}
 		mMessage_prompt.setText(selected_item + " ");
 		HttpClient Client = new DefaultHttpClient();
 		String URL = Constants.SRV_URL + Constants.SRV_API + "GetCliIp/" + selected_item;
@@ -82,11 +94,6 @@ public class ChatActivity extends Activity
 		}
 		catch (Exception ex)
 		{}
-		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
-		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-		int ip = wifiInfo.getIpAddress();
-		Log.d("tag", " /" + ip + " /");
-
 	}
 
 	public void client() throws IOException
@@ -130,7 +137,33 @@ public class ChatActivity extends Activity
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
+		Log.d("amis", "onSaveInstanceState");
 		outState.putStringArrayList("messages", mMessages);
+	}
+
+	protected void onPause(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		Log.d("amis", "onPause");
+
+		super.onPause();
+	}
+
+	protected void onStart(Bundle savedInstanceState)
+	{
+		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+		int ip = wifiInfo.getIpAddress();
+		Log.d("tag", " /" + ip + " /");
+
+	}
+
+	protected void onResume(Bundle savedInstanceState)
+	{
+		super.onResume();
+		mMessages = savedInstanceState.getStringArrayList("messages");
+		Log.d("amis", "onResume");
+
 	}
 
 	@Override
@@ -142,15 +175,17 @@ public class ChatActivity extends Activity
 		HashMap<String, String> user = session.getUserDetails();
 		String name = user.get(UserSessionManager.KEY_NAME);
 
-		for (String message : mMessages)
+		if (mMessages == null)
 		{
-			Date d = new Date();
-			SimpleDateFormat f = new SimpleDateFormat("HHmmss");
-			String s = f.format(d);
-			addMessage(name + " (" + s + ")" + " : " + message);
-
+			for (String message : mMessages)
+			{
+				Date d = new Date();
+				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+				String s = f.format(d);
+				addMessage(name + " (" + s + ")" + " : " + message);
+			}
 		}
-
+		Log.d("amis", "onRestoreInstanceState");
 	}
 
 	@SuppressLint("NewApi")
@@ -167,7 +202,6 @@ public class ChatActivity extends Activity
 			String s = f.format(d);
 			addMessage(name + " (" + s + ")" + " : " + message);
 			mMessages.add(name + " (" + s + ")" + " : " + message);
-
 		}
 	}
 
