@@ -15,25 +15,23 @@
         android:layout_height="wrap_content">
     </EditText>
 
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/editTextUserName"
-            android:layout_alignRight="@+id/editTextUserName"
-            android:layout_below="@+id/SearchMail"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="20dp"
-            android:text="TextView" />
-
         <Button
             android:id="@+id/SearchMail"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/result"
             android:layout_below="@+id/editTextUserName"
-            android:layout_marginTop="41dp"
+            android:layout_centerHorizontal="true"
             android:hint="Chercher" />
+
+        <ListView
+            android:id="@+id/resultL"
+            android:layout_width="match_parent"
+            android:layout_height="286dp"
+            android:layout_alignLeft="@+id/editTextUserName"
+            android:layout_below="@+id/SearchMail"
+            android:layout_marginTop="17dp"
+            android:layout_weight="0.56" >
+        </ListView>
 
 </RelativeLayout>

@@ -66,11 +66,6 @@ public class SignUPActivity extends Activity
 				String SecurePassword = securePassword.getText().toString();
 				String ConfirmSecurePassword = confirmSecurePassword.getText().toString();
 
-				String spinner_crypt = spinner.getSelectedItem().toString();
-				// PasswordUtilities pass = new PasswordUtilities();
-				// HashMap<String, Boolean> value =
-				// PasswordUtilities.isStrongEnough(password);
-				// Log.d("MyApp", "Registration success" + value);
 				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();

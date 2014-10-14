@@ -75,7 +75,6 @@ public class ListFriends extends Activity
 		btnAddFriends = (Button) findViewById(R.id.buttonAddFriends);
 		btnchangeProfile = (Button) findViewById(R.id.changeProfile);
 
-		listfriends = (ListView) findViewById(R.id.friends_row);
 		String d_ami1, friend_1, friend_2, friend_3, friend_4, friend_5, friend_6 = null;
 		String state_1, state_2, state_3, state_4, state_5;
 		HttpClient Client = new DefaultHttpClient();

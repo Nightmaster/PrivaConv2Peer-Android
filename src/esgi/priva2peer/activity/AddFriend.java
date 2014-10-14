@@ -1,6 +1,5 @@
 package esgi.priva2peer.activity;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -11,15 +10,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.parser.AddFriendJsonParser;
@@ -37,8 +39,8 @@ public class AddFriend extends Activity
 	final Context context = this;
 
 	Button SearchMail, Add;
-	TextView result;
 	EditText editTextUserName;
+	ListView searchList;
 
 	ArrayList<String> list = new ArrayList<String>();
 
@@ -51,9 +53,9 @@ public class AddFriend extends Activity
 		setContentView(R.layout.add_friend);
 
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
+		searchList = (ListView) findViewById(R.id.resultL);
 
 		SearchMail = (Button) findViewById(R.id.SearchMail);
-		result = (TextView) findViewById(R.id.result);
 
 		HttpClient Client = new DefaultHttpClient();
 		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
@@ -72,9 +74,7 @@ public class AddFriend extends Activity
 
 		}
 		catch (Exception ex)
-		{
-			Log.d("liste", "Fail! 22222");
-		}
+		{}
 
 		SearchMail.setOnClickListener(new View.OnClickListener()
 		{
@@ -91,7 +91,6 @@ public class AddFriend extends Activity
 				}
 				HttpClient Client = new DefaultHttpClient();
 				String URL = "http://54.194.20.131:8080/webAPI/search" + parametre;
-				Log.d("fd", URL);
 				try
 				{
 
@@ -103,48 +102,80 @@ public class AddFriend extends Activity
 					}
 					String SetServerString = "";
 					SetServerString = Client.execute(httpget, responseHandler);
-					Log.d("Json", "yes = " + SetServerString);
 
 					SearchJsonParser stAlJson = JSONParser.getSearchParser(SetServerString);
-					if (stAlJson.isError() == false)
+					if (!stAlJson.isError())
 					{
-
-						for (UserInfos friend : stAlJson.getProfiles())
+						final UserInfos[] us = stAlJson.getProfiles();
+						String[] list = new String[us.length];
+						for (int i = 0; i < us.length; i++ )
 						{
-							Log.d("dfefd", friend.getLogin() + "  /  " + friend.getName() + " / " + friend.getFirstname() + " ");
-							result.setText("Login : " + friend.getLogin() + " Nom : " + friend.getName() + " Prénom : " + friend.getFirstname());
+							list[i] = "Login : " + us[i].getLogin() + " \nNom : " + us[i].getName() + " \nPrénom : " + us[i].getFirstname();
 
-							AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-
-							alertDialogBuilder.setTitle("L'inviter?");
-
-							alertDialogBuilder.setMessage("Inviter à sa liste d'amis?").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int id)
-								{
-									AddFriend();
-									AddFriend.this.finish();
-								}
-
-								private void AddFriend()
-								{
-									// AddFriend();
-
-								}
-							}).setNegativeButton("No", new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int id)
-								{
-									dialog.cancel();
-								}
-							});
-
-							AlertDialog alertDialog = alertDialogBuilder.create();
-							alertDialog.show();
 						}
 
+						ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddFriend.this, android.R.layout.simple_list_item_1, list);
+
+						searchList.setAdapter(arrayAdapter);
+						searchList.setOnItemClickListener(new OnItemClickListener()
+						{
+							@Override
+							public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
+							{
+								Log.d("jhikj", us[position].getLogin());
+								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+								alertDialogBuilder.setTitle("Demande d'invitation");
+								final String userSelected = us[position].getLogin();
+
+								alertDialogBuilder.setMessage("Ajouter " + userSelected + " à sa liste d'amis?").setCancelable(false).setPositiveButton("Oui", new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(DialogInterface dialog, int id)
+									{
+
+										HttpClient Client = new DefaultHttpClient();
+										try
+										{
+											String field = "username=";
+											String URL = Constants.SRV_URL + Constants.SRV_API + "addFriend?" + field + userSelected;
+											HttpGet httpget = new HttpGet(URL);
+											ResponseHandler<String> responseHandler = new BasicResponseHandler();
+											if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+											{
+												httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+											}
+
+											String SetServerString = "";
+											SetServerString = Client.execute(httpget, responseHandler);
+											AddFriendJsonParser stAlJson = JSONParser.getAddFriendParser(SetServerString);
+											if (stAlJson.isInvitationSent())
+											{
+												Toast.makeText(getApplicationContext(), "Invitation Envoyé", Toast.LENGTH_LONG).show();
+											}
+
+										}
+										catch (Exception ex)
+										{}
+										Intent select_f_intent = new Intent(view.getContext(), ListFriends.class);
+										startActivity(select_f_intent);
+										AddFriend.this.finish();
+									}
+
+								}).setNegativeButton("Non", new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(DialogInterface dialog, int id)
+									{
+										dialog.cancel();
+
+									}
+								});
+
+								AlertDialog alertDialog = alertDialogBuilder.create();
+								alertDialog.show();
+							}
+						});
 					}
 					else
 					{
@@ -168,60 +199,5 @@ public class AddFriend extends Activity
 	protected void onDestroy()
 	{
 		super.onDestroy();
-	}
-
-	protected AddFriend()
-	{
-		String userName = UserName.getText().toString();
-
-		if (userName.equals(""))
-		{
-			Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
-			return;
-		}
-		else
-		{
-			String caractere = "@";
-			String login = "";
-			boolean trouve = userName.contains(caractere);
-			if (trouve == true)
-			{
-				login += "email=";
-			}
-			else
-			{
-				login += "username=";
-			}
-			try
-			{
-				userName = URLEncoder.encode(userName, "UTF-8");
-
-			}
-			catch (Exception e)
-			{}
-			HttpClient Client = new DefaultHttpClient();
-			try
-			{
-				String URL = Constants.SRV_URL + Constants.SRV_API + "addFriend?" + login + userName;
-
-				HttpGet httpget = new HttpGet(URL);
-				ResponseHandler<String> responseHandler = new BasicResponseHandler();
-				if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
-				{
-					httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
-				}
-
-				String SetServerString = "";
-				SetServerString = Client.execute(httpget, responseHandler);
-				AddFriendJsonParser stAlJson = JSONParser.getAddFriendParser(SetServerString);
-				if (stAlJson.isInvitationSent())
-				{
-					Toast.makeText(getApplicationContext(), "Invitation Envoyé", Toast.LENGTH_LONG).show();
-				}
-
-			}
-			catch (Exception ex)
-			{}
-		}
 	}
 }

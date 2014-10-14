@@ -75,7 +75,7 @@ public class ChatActivity extends Activity
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
 			String[] ip_friend_selected = SetServerString.split("\"");
-			Log.d("kjdbsf", ip_friend_selected[5] + "/fd");
+			Log.d("amis", ip_friend_selected[5] + "receiver");
 
 		}
 		catch (Exception ex)
@@ -83,8 +83,7 @@ public class ChatActivity extends Activity
 		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
 		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
 		int ip = wifiInfo.getIpAddress();
-		String ipAddress = wifiIpAddress(context);
-		Toast.makeText(getApplicationContext(), ip + " /" + ipAddress, Toast.LENGTH_LONG).show();
+		Log.d("tag", " /" + ip + " /");
 
 	}
 
