@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -49,12 +48,6 @@ public class SignUPActivity extends Activity
 		editTextLastName = (EditText) findViewById(R.id.editTextLastName);
 		editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 		editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
-		securePassword = (EditText) findViewById(R.id.SecurePassword);
-		confirmSecurePassword = (EditText) findViewById(R.id.ConfirmSecurePassword);
-
-		spinner = (Spinner) this.findViewById(R.id.spinner1);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sports, android.R.layout.simple_spinner_item);
-		spinner.setAdapter(adapter);
 
 		btnCreateAccount = (Button) findViewById(R.id.buttonCreateAccount);
 
@@ -105,19 +98,8 @@ public class SignUPActivity extends Activity
 							hashpass = "0" + hashpass;
 						}
 
-						// Hash du 2em pass
-						MessageDigest k = MessageDigest.getInstance("MD5");
-						k.reset();
-						k.update(SecurePassword.getBytes());
-						byte[] digest_k = k.digest();
-						BigInteger bigInt_k = new BigInteger(1, digest_k);
-						String hash_k = bigInt_k.toString(16);
-						while (hash_k.length() < 32)
-						{
-							hash_k = "0" + hash_k;
-						}
-						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt, userName, URLEncoder.encode(userName, "UTF-8"));
-						System.out.println("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass + "&pwK=" + hash_k + "&length=" + spinner_crypt);
+						String registrationUrl = String.format("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass, userName, URLEncoder.encode(userName, "UTF-8"));
+						System.out.println("http://54.194.20.131:8080/webAPI/register?" + "username=" + userName + "&email=" + userMail + "&firstname=" + firstName + "&name=" + lastName + "&pw=" + hashpass);
 						url = new URL(registrationUrl);
 						URLConnection connection = url.openConnection();
 						HttpURLConnection httpConnection = (HttpURLConnection) connection;

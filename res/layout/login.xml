@@ -10,9 +10,8 @@
         android:layout_height="wrap_content"
         android:hint="Pseudo ou Email"
         android:ems="10" 
-        android:text="brunogb" >
-        <requestFocus />
-    </EditText>
+        android:text="brunogb" />
+       
  
     <EditText
         android:id="@+id/editTextPasswordToLogin"

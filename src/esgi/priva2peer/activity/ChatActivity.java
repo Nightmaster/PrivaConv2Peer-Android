@@ -59,8 +59,7 @@ public class ChatActivity extends Activity
 
 		Bundle extras = getIntent().getExtras();
 		String selected_item = extras.getString("selected_item");
-		mMessage_prompt.setText(selected_item);
-		// /mMessage_prompt.setText(R.string.message_prompt);
+		mMessage_prompt.setText(selected_item + " ");
 		HttpClient Client = new DefaultHttpClient();
 		String URL = Constants.SRV_URL + Constants.SRV_API + "GetCliIp/" + selected_item;
 
@@ -76,7 +75,7 @@ public class ChatActivity extends Activity
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
 			String[] ip_friend_selected = SetServerString.split("\"");
-			Log.d("kjdbsf", ip_friend_selected[5]);
+			Log.d("kjdbsf", ip_friend_selected[5] + "/fd");
 
 		}
 		catch (Exception ex)

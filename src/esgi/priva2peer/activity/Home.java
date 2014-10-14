@@ -200,7 +200,6 @@ public class Home extends Activity
 						list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(list_f_intent);
 						dialog.dismiss();
-
 					}
 					else
 					{
@@ -238,9 +237,14 @@ public class Home extends Activity
 
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
+			android.os.Process.killProcess(android.os.Process.myPid());
+			finish();
+			System.exit(0);
 		}
 		catch (Exception ex)
 		{
+			Log.d("deco non", "non");
+
 			ex.printStackTrace();
 		}
 		super.onDestroy();

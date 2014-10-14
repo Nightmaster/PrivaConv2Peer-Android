@@ -52,8 +52,6 @@ public class ChangeProfile extends Activity
 		String last_n = user.get(UserSessionManager.KEY_FirstName);
 		String first_n = user.get(UserSessionManager.KEY_LastName);
 
-		Toast.makeText(getApplicationContext(), "Pseudo : " + name + " MAil : " + email + " prenom : " + first_n + " nom : " + last_n, Toast.LENGTH_LONG).show();
-
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		editTextUserMail = (EditText) findViewById(R.id.editTextUserMail);
 		editTextLastName = (EditText) findViewById(R.id.editTextLastName);

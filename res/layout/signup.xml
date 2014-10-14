@@ -58,39 +58,8 @@ android:layout_height="wrap_content">
         android:hint="ConfirmPassword"
         android:inputType="textPassword" >
     </EditText>
-    
-    <EditText
-        android:id="@+id/SecurePassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="SecurePassword"
-        android:inputType="textPassword" >
-        </EditText>
         
-    <EditText
-        android:id="@+id/ConfirmSecurePassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="ConfirmSecurePassword"
-        android:ems="10"
-        android:inputType="textPassword" >
-    </EditText>
-    
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Information à prendre en compte pour la longueur de la clé de cryptage:
-					  \n- 1024 : peu sécurisé, mais traitement rapide;
-					  \n- 2048 : bon rapport sécurité / vitesse de traitement;
-					  \n- 4096 : très sécurisé, mais vitesse de traitement plus lente" />
-    
-    <Spinner 
-        android:id="@+id/spinner1" 
-        android:layout_width="match_parent" 
-        android:layout_height="wrap_content" 
-        android:entries="@array/sports"> 
-</Spinner> 
+
    
     <Button
         android:id="@+id/buttonCreateAccount"

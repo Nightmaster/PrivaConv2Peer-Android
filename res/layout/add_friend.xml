@@ -7,30 +7,33 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".AddFriendDataBase" >
-
-    <TextView
-        android:id="@+id/LabelAddMail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="57dp"
-        android:hint="Ajouter un contact :" />
-
+    
     <EditText
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/LabelAddMail"
-        android:ems="10"
-        android:hint="Pseudo" />
+        android:id="@+id/editTextUserName"
+        android:hint="Pseudo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </EditText>
 
-    <Button
-        android:id="@+id/SearchMail"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/userName"
-        android:layout_below="@+id/LabelAddMail"
-        android:layout_marginLeft="32dp"
-        android:hint="Confirmer" />
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/editTextUserName"
+            android:layout_alignRight="@+id/editTextUserName"
+            android:layout_below="@+id/SearchMail"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="20dp"
+            android:text="TextView" />
+
+        <Button
+            android:id="@+id/SearchMail"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/result"
+            android:layout_below="@+id/editTextUserName"
+            android:layout_marginTop="41dp"
+            android:hint="Chercher" />
 
 </RelativeLayout>
