@@ -196,7 +196,7 @@ public class Home extends Activity
 					if (stAlJson.isConnectionValidated())
 					{
 
-						Intent list_f_intent = new Intent(getApplicationContext(), ListFriends.class);
+						Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
 						list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(list_f_intent);
 						dialog.dismiss();
