@@ -3,9 +3,16 @@ package esgi.priva2peer.chat;
 import java.net.Socket;
 import java.util.Arrays;
 import esgi.priva2peer.activity.ChatActivity;
+import esgi.priva2peer.communication.parser.ConnectionJsonParser;
 
 public class Client implements Runnable
 {
+	private ConnectionJsonParser cjp;
+
+	public Client(ConnectionJsonParser cjp)
+	{
+		this.cjp = cjp;
+	}
 
 	@Override
 	public void run()
@@ -28,8 +35,4 @@ public class Client implements Runnable
 
 	}
 
-	public static void main(String[] args)
-	{
-		new Thread(new Client()).start();
-	}
 }

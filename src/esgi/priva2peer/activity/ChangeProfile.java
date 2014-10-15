@@ -170,7 +170,6 @@ public class ChangeProfile extends Activity
 			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
 			{
 				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
-				Log.d("deco ok", "ui");
 			}
 
 			String SetServerString = "";

@@ -199,7 +199,6 @@ public class ListFriends extends Activity
 						}
 						catch (Exception e)
 						{
-							Log.d("refuse", "Fail!");
 							e.printStackTrace();
 						}
 						dialog.dismiss();
@@ -210,9 +209,7 @@ public class ListFriends extends Activity
 
 		}
 		catch (Exception ex)
-		{
-			Log.d("dksjhf", "DEAD");
-		}
+		{}
 
 		btnAddFriends.setOnClickListener(new View.OnClickListener()
 		{
@@ -273,7 +270,6 @@ public class ListFriends extends Activity
 			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
 			{
 				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
-				Log.d("deco ok", "ui");
 			}
 
 			String SetServerString = "";

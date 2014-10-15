@@ -2,7 +2,7 @@ package esgi.priva2peer.chat;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.Arrays;
 
 public class Server implements Runnable
 {
@@ -18,13 +18,13 @@ public class Server implements Runnable
 			{
 				Socket socket = server.accept();
 				System.out.println(socket.getInetAddress() + " " + socket.getPort());
-				Scanner sc = new Scanner(System.in);
-				String st = new String();
-				while ((st = sc.nextLine()).trim().length() > 0)
+				byte[] b = new byte[256];
+				int count;
+				while ((count = socket.getInputStream().read(b)) > 0)
 				{
-					socket.getOutputStream().write(st.getBytes());
+					System.out.println(new String(Arrays.copyOf(b, count)));
 				}
-				sc.close();
+
 				socket.close();
 			}
 		}

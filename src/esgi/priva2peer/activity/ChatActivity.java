@@ -1,9 +1,6 @@
 package esgi.priva2peer.activity;
 
-import java.io.IOException;
 import java.math.BigInteger;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
@@ -17,6 +14,9 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.bitlet.weupnp.GatewayDevice;
+import org.bitlet.weupnp.GatewayDiscover;
+import org.bitlet.weupnp.PortMappingEntry;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -123,12 +123,41 @@ public class ChatActivity extends Activity
 			Log.d("ip = ", parts[7]); // IP
 			ADRESS_TO_CONNECT = parts[7];
 			SAMPLE_PORT = stAlJson.getIpAndPort().getPort();
-			// GatewayDiscover gatewayDiscover = new GatewayDiscover();
+			GatewayDiscover gatewayDiscover = new GatewayDiscover();
 			//
 			// // choose the first active gateway for the tests
+			Map<InetAddress, GatewayDevice> gateways = gatewayDiscover.discover();
 			// // prend la box
-			// GatewayDevice activeGW = gatewayDiscover.getValidGateway();
+			GatewayDevice activeGW = gatewayDiscover.getValidGateway();
 
+			// testing getGenericPortMappingEntry
+			PortMappingEntry portMapping = new PortMappingEntry();
+			// local address = adresse ip machine
+			InetAddress localAddress = activeGW.getLocalAddress();
+			if (activeGW.getSpecificPortMappingEntry(SAMPLE_PORT, "TCP", portMapping))
+			{
+				System.out.println("Port " + SAMPLE_PORT + " is already mapped.");
+				// delete s'il est utilisé
+				activeGW.deletePortMapping(SAMPLE_PORT, "TCP");
+				return;
+			}
+			else
+			{
+				// test static lease duration mapping
+				// vers ou on map
+				// SAMPLE_PORT box, SAMPLE_PORT machine, adresse machine,
+				// Protocole,
+				// description
+				if (activeGW.addPortMapping(SAMPLE_PORT, SAMPLE_PORT, localAddress.getHostAddress(), "TCP", "test"))
+				{
+					Thread t = new Thread(new esgi.priva2peer.chat.Server());
+					t.start();
+					Thread.sleep(1000 * WAIT_TIME);
+					t.interrupt();
+					activeGW.deletePortMapping(SAMPLE_PORT, "TCP");
+					System.out.println("get IP and port");
+				}
+			}
 		}
 		catch (Exception ex)
 		{}
@@ -161,17 +190,6 @@ public class ChatActivity extends Activity
 		}
 		catch (Exception ex)
 		{}
-	}
-
-	public void client() throws IOException
-	{
-		InetAddress ip = InetAddress.getByName("192.168.1.102");
-		DatagramSocket socket = new DatagramSocket();
-		byte[] outData = ("helloooo").getBytes();
-
-		DatagramPacket out = new DatagramPacket(outData, outData.length, ip, 2060);
-		socket.send(out);
-		System.out.println("Send >>> ");
 	}
 
 	public String wifiIpAddress(Context context)

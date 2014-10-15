@@ -63,15 +63,13 @@ public class SignUPActivity extends Activity
 				String firstName = editTextFirstName.getText().toString();
 				String password = editTextPassword.getText().toString();
 				String confirmPassword = editTextConfirmPassword.getText().toString();
-				String SecurePassword = securePassword.getText().toString();
-				String ConfirmSecurePassword = confirmSecurePassword.getText().toString();
 
 				if (userName.equals("") || password.equals("") || confirmPassword.equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Field Vaccant", Toast.LENGTH_LONG).show();
 					return;
 				}
-				if (!password.equals(confirmPassword) || !SecurePassword.equals(ConfirmSecurePassword))
+				if (!password.equals(confirmPassword))
 				{
 					Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_LONG).show();
 					return;

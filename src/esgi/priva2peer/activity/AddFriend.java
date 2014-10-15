@@ -56,7 +56,6 @@ public class AddFriend extends Activity
 
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName);
 		searchList = (ListView) findViewById(R.id.resultL);
-
 		SearchMail = (Button) findViewById(R.id.SearchMail);
 		info = (TextView) findViewById(R.id.info);
 
@@ -64,15 +63,13 @@ public class AddFriend extends Activity
 		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
 		try
 		{
-
 			HttpGet httpget = new HttpGet(URL);
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
 			{
 				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
 			}
-			String SetServerString = "";
-			SetServerString = Client.execute(httpget, responseHandler);
+			String SetServerString = Client.execute(httpget, responseHandler);
 
 		}
 		catch (Exception ex)
@@ -197,7 +194,7 @@ public class AddFriend extends Activity
 	}
 
 	@Override
-	protected void onDestroy()
+	protected void onDestroy() // deconnexion du serveur
 	{
 		HttpClient Client = new DefaultHttpClient();
 		String URL = Constants.SRV_URL + Constants.SRV_API + "disconnect";
