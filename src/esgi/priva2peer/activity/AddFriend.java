@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.communication.parser.AddFriendJsonParser;
@@ -41,6 +42,7 @@ public class AddFriend extends Activity
 	Button SearchMail, Add;
 	EditText editTextUserName;
 	ListView searchList;
+	TextView info;
 
 	ArrayList<String> list = new ArrayList<String>();
 
@@ -56,6 +58,7 @@ public class AddFriend extends Activity
 		searchList = (ListView) findViewById(R.id.resultL);
 
 		SearchMail = (Button) findViewById(R.id.SearchMail);
+		info = (TextView) findViewById(R.id.info);
 
 		HttpClient Client = new DefaultHttpClient();
 		String URL = "http://54.194.20.131:8080/webAPI/stayAlive";
@@ -70,120 +73,120 @@ public class AddFriend extends Activity
 			}
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
-			Log.d("Json", "yes = " + SetServerString);
 
 		}
 		catch (Exception ex)
 		{}
 
-		SearchMail.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				String userName = editTextUserName.getText().toString();
-
-				String parametre = "";
-
-				if (userName != "") // juste login
+		SearchMail.setOnClickListener(new View.OnClickListener() // Recherche
+																	// D'amis
 				{
-					parametre = "?username=" + userName;
-				}
-				HttpClient Client = new DefaultHttpClient();
-				String URL = "http://54.194.20.131:8080/webAPI/search" + parametre;
-				try
-				{
-
-					HttpGet httpget = new HttpGet(URL);
-					ResponseHandler<String> responseHandler = new BasicResponseHandler();
-					if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+					@Override
+					public void onClick(View v)
 					{
-						httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
-					}
-					String SetServerString = "";
-					SetServerString = Client.execute(httpget, responseHandler);
+						String userName = editTextUserName.getText().toString();
 
-					SearchJsonParser stAlJson = JSONParser.getSearchParser(SetServerString);
-					if (!stAlJson.isError())
-					{
-						final UserInfos[] us = stAlJson.getProfiles();
-						String[] list = new String[us.length];
-						for (int i = 0; i < us.length; i++ )
+						String parametre = "";
+
+						if (userName != "") // juste login
 						{
-							list[i] = "Login : " + us[i].getLogin() + " \nNom : " + us[i].getName() + " \nPrénom : " + us[i].getFirstname();
-
+							parametre = "?username=" + userName;
 						}
-
-						ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddFriend.this, android.R.layout.simple_list_item_1, list);
-
-						searchList.setAdapter(arrayAdapter);
-						searchList.setOnItemClickListener(new OnItemClickListener()
+						HttpClient Client = new DefaultHttpClient();
+						String URL = "http://54.194.20.131:8080/webAPI/search" + parametre;
+						try
 						{
-							@Override
-							public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
+
+							HttpGet httpget = new HttpGet(URL);
+							ResponseHandler<String> responseHandler = new BasicResponseHandler();
+							if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
 							{
-								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-								alertDialogBuilder.setTitle("Demande d'invitation");
-								final String userSelected = us[position].getLogin();
+								httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+							}
+							String SetServerString = "";
+							SetServerString = Client.execute(httpget, responseHandler);
 
-								alertDialogBuilder.setMessage("Ajouter " + userSelected + " à sa liste d'amis?").setCancelable(false).setPositiveButton("Oui", new DialogInterface.OnClickListener()
+							SearchJsonParser stAlJson = JSONParser.getSearchParser(SetServerString);
+							if (!stAlJson.isError())
+							{
+								final UserInfos[] us = stAlJson.getProfiles();
+								String[] list = new String[us.length];
+								for (int i = 0; i < us.length; i++ )
+								{
+									list[i] = "Login : " + us[i].getLogin() + " \nNom : " + us[i].getName() + " \nPrénom : " + us[i].getFirstname();
+
+								}
+
+								ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddFriend.this, android.R.layout.simple_list_item_1, list);
+
+								searchList.setAdapter(arrayAdapter);
+								searchList.setOnItemClickListener(new OnItemClickListener()
 								{
 									@Override
-									public void onClick(DialogInterface dialog, int id)
+									public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
 									{
+										AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+										alertDialogBuilder.setTitle("Demande d'invitation");
+										final String userSelected = us[position].getLogin();
 
-										HttpClient Client = new DefaultHttpClient();
-										try
+										alertDialogBuilder.setMessage("Ajouter " + userSelected + " à sa liste d'amis?").setCancelable(false).setPositiveButton("Oui", new DialogInterface.OnClickListener()
 										{
-											String field = "username=";
-											String URL = Constants.SRV_URL + Constants.SRV_API + "addFriend?" + field + userSelected;
-											HttpGet httpget = new HttpGet(URL);
-											ResponseHandler<String> responseHandler = new BasicResponseHandler();
-											if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+											@Override
+											public void onClick(DialogInterface dialog, int id)
 											{
-												httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+
+												HttpClient Client = new DefaultHttpClient();
+												try
+												{
+													String field = "username=";
+													String URL = Constants.SRV_URL + Constants.SRV_API + "addFriend?" + field + userSelected;
+													HttpGet httpget = new HttpGet(URL);
+													ResponseHandler<String> responseHandler = new BasicResponseHandler();
+													if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+													{
+														httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+													}
+
+													String SetServerString = "";
+													SetServerString = Client.execute(httpget, responseHandler);
+													AddFriendJsonParser stAlJson = JSONParser.getAddFriendParser(SetServerString);
+													if (stAlJson.isInvitationSent())
+													{
+														Toast.makeText(getApplicationContext(), "Invitation Envoyé", Toast.LENGTH_LONG).show();
+													}
+
+												}
+												catch (Exception ex)
+												{}
+												Intent select_f_intent = new Intent(view.getContext(), ListFriends.class);
+												startActivity(select_f_intent);
+												AddFriend.this.finish();
 											}
 
-											String SetServerString = "";
-											SetServerString = Client.execute(httpget, responseHandler);
-											AddFriendJsonParser stAlJson = JSONParser.getAddFriendParser(SetServerString);
-											if (stAlJson.isInvitationSent())
+										}).setNegativeButton("Non", new DialogInterface.OnClickListener()
+										{
+											@Override
+											public void onClick(DialogInterface dialog, int id)
 											{
-												Toast.makeText(getApplicationContext(), "Invitation Envoyé", Toast.LENGTH_LONG).show();
+												dialog.cancel();
+
 											}
+										});
 
-										}
-										catch (Exception ex)
-										{}
-										Intent select_f_intent = new Intent(view.getContext(), ListFriends.class);
-										startActivity(select_f_intent);
-										AddFriend.this.finish();
-									}
-
-								}).setNegativeButton("Non", new DialogInterface.OnClickListener()
-								{
-									@Override
-									public void onClick(DialogInterface dialog, int id)
-									{
-										dialog.cancel();
-
+										AlertDialog alertDialog = alertDialogBuilder.create();
+										alertDialog.show();
 									}
 								});
-
-								AlertDialog alertDialog = alertDialogBuilder.create();
-								alertDialog.show();
 							}
-						});
+							else
+							{
+								Toast.makeText(getApplicationContext(), "non connu", Toast.LENGTH_SHORT).show();
+							}
+						}
+						catch (Exception ex)
+						{}
 					}
-					else
-					{
-						Toast.makeText(getApplicationContext(), "non connu", Toast.LENGTH_SHORT).show();
-					}
-				}
-				catch (Exception ex)
-				{}
-			}
-		});
+				});
 	}
 
 	@Override
@@ -196,6 +199,29 @@ public class AddFriend extends Activity
 	@Override
 	protected void onDestroy()
 	{
+		HttpClient Client = new DefaultHttpClient();
+		String URL = Constants.SRV_URL + Constants.SRV_API + "disconnect";
+		try
+		{
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+				Log.d("deco ok", "ui");
+			}
+
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+			android.os.Process.killProcess(android.os.Process.myPid());
+			finish();
+			System.exit(0);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		super.onDestroy();
+
 	}
 }

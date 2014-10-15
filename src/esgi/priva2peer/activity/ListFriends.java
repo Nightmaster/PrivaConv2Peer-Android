@@ -259,4 +259,33 @@ public class ListFriends extends Activity
 		{}
 		return ip;
 	}
+
+	@Override
+	protected void onDestroy()
+	{
+		session.logoutUser();
+		HttpClient Client = new DefaultHttpClient();
+		String URL = Constants.SRV_URL + Constants.SRV_API + "disconnect";
+		try
+		{
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "defaultStringIfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound"));
+				Log.d("deco ok", "ui");
+			}
+
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+			android.os.Process.killProcess(android.os.Process.myPid());
+			finish();
+			System.exit(0);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		super.onDestroy();
+	}
 }

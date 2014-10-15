@@ -29,9 +29,17 @@
             android:layout_width="match_parent"
             android:layout_height="286dp"
             android:layout_alignLeft="@+id/editTextUserName"
-            android:layout_below="@+id/SearchMail"
-            android:layout_marginTop="17dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="37dp"
             android:layout_weight="0.56" >
         </ListView>
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/resultL"
+            android:layout_alignLeft="@+id/resultL"
+            android:text="Utilisez * comme un joker pour des recherches partielles. Laissez vide si inutilisé"/>
 
 </RelativeLayout>

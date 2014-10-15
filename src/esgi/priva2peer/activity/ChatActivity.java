@@ -43,8 +43,8 @@ import esgi.priva2peer.data.Constants;
 public class ChatActivity extends Activity
 {
 
-	public static String ADRESS_TO_CONNECT = "82.236.84.61";
-	public static int SAMPLE_PORT = 6991;
+	public static String ADRESS_TO_CONNECT = "";
+	public static int SAMPLE_PORT;
 
 	private static short WAIT_TIME = 120;
 
@@ -61,27 +61,44 @@ public class ChatActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
-
-		Log.d("amis", "onCreate");
 		Map<String, String> talk = new HashMap<String, String>();
 
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);
 		mMessage_prompt = (TextView) findViewById(R.id.message_prompt);
 
-		// mMessages = savedInstanceState.getStringArrayList("messages");
-		// // parcourir avec une boucle
-		// for (String message : mMessages)
-		// {
-		// Log.d("amis", message);
-		//
-		// }
-
 		Bundle extras = getIntent().getExtras();
 		String selected_item = extras.getString("selected_item");
+		String privateKey = extras.getString("key_private");
+
+		Log.d("amis", "onCreate");
+		if (savedInstanceState != null)
+		{
+			mMessages = savedInstanceState.getStringArrayList("mMessages");
+			for (int i = 0; i < mMessages.size(); i++ )
+			{
+				Log.d("fd", mMessages.get(i));
+				mMessages.get(i);
+				addMessage(mMessages.get(i));
+			}
+		}
+
 		if (selected_item != "")
 		{
+			Log.d("ami", selected_item);
 			mMessage_prompt.setText(selected_item + " ");
+
+		}
+		else
+		{
+			Log.d("fdsf", "rien");
+
+		}
+		for (String message : mMessages)
+		{
+			addMessage(message);
+			Log.d("amis", message);
+
 		}
 
 		HttpClient Client = new DefaultHttpClient();
@@ -105,11 +122,16 @@ public class ChatActivity extends Activity
 			Log.d("port = ", "vfdsf" + stAlJson.getIpAndPort().getPort()); // IP
 			Log.d("ip = ", parts[7]); // IP
 			ADRESS_TO_CONNECT = parts[7];
+			SAMPLE_PORT = stAlJson.getIpAndPort().getPort();
+			// GatewayDiscover gatewayDiscover = new GatewayDiscover();
+			//
+			// // choose the first active gateway for the tests
+			// // prend la box
+			// GatewayDevice activeGW = gatewayDiscover.getValidGateway();
 
 		}
 		catch (Exception ex)
 		{}
-		getPublickey(selected_item);
 
 	}
 
@@ -184,8 +206,9 @@ public class ChatActivity extends Activity
 		super.onSaveInstanceState(outState);
 		Log.d("amis", "onSaveInstanceState");
 		outState.putStringArrayList("messages", mMessages);
-		outState.putStringArrayList("s", mMessages);
-
+		Bundle extras = getIntent().getExtras();
+		String selected_item = extras.getString("selected_item");
+		outState.putString("selected_item", selected_item);
 	}
 
 	protected void onPause(Bundle outState)
@@ -213,25 +236,31 @@ public class ChatActivity extends Activity
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle outState)
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
 	{
-		super.onRestoreInstanceState(outState);
-		mMessages = outState.getStringArrayList("messages");
+		super.onRestoreInstanceState(savedInstanceState);
+		mMessages = savedInstanceState.getStringArrayList("messages");
 		session = new UserSessionManager(getApplicationContext());
 		HashMap<String, String> user = session.getUserDetails();
 		String name = user.get(UserSessionManager.KEY_NAME);
-
-		if (mMessages == null)
+		if (mMessages != null)
 		{
 			for (String message : mMessages)
 			{
 				Date d = new Date();
-				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+				SimpleDateFormat f = new SimpleDateFormat("HH:mm");
 				String s = f.format(d);
 				addMessage(name + " (" + s + ")" + " : " + message);
 			}
 		}
 		Log.d("amis", "onRestoreInstanceState");
+
+		for (int i = 0; i < mMessages.size(); i++ )
+		{
+			Log.d("fd", mMessages.get(i));
+			mMessages.get(i);
+			addMessage(mMessages.get(i));
+		}
 	}
 
 	@SuppressLint("NewApi")
@@ -257,5 +286,6 @@ public class ChatActivity extends Activity
 		TextView textV = new TextView(this);
 		textV.setText(message);
 		mMainLayout.addView(textV);
+
 	}
 }

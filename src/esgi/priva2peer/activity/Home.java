@@ -200,6 +200,8 @@ public class Home extends Activity
 
 						Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
 						// getPrivateKey(editTextUserName.getText().toString());
+						// list_f_intent.putExtra("key_private",
+						// getPrivateKey(editTextUserName.getText().toString()).toString());
 						list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(list_f_intent);
 						dialog.dismiss();
@@ -219,10 +221,11 @@ public class Home extends Activity
 		dialog.show();
 	}
 
-	public void getPrivateKey(String username)
+	public String getPrivateKey(String username)
 	{
 		HttpClient Client = new DefaultHttpClient();
 		String URL = Constants.SRV_URL + Constants.SRV_API + "getPrivateKey/" + username;
+		String key = null;
 
 		try
 		{
@@ -239,11 +242,14 @@ public class Home extends Activity
 			if (!stAlJson.isError())
 			{
 				String[] parts = SetServerString.split("\"");
+				key = parts[5];
 				// Log.d("PrivK", parts[5]); // clef public de l'ami
+				//
 			}
 		}
 		catch (Exception ex)
 		{}
+		return key;
 	}
 
 	@Override
