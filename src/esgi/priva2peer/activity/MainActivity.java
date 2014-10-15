@@ -30,13 +30,7 @@ public class MainActivity extends TabActivity
 		Intent friendIntent = new Intent(this, ListFriends.class);
 		friendspec.setContent(friendIntent);
 
-		TabSpec chatspec = tabHost.newTabSpec("Conversation");
-		chatspec.setIndicator("Conversation");
-		Intent chatIntent = new Intent(this, ChatActivity.class);
-		chatspec.setContent(chatIntent);
-
 		tabHost.addTab(loginspec);
 		tabHost.addTab(friendspec);
-		tabHost.addTab(chatspec);
 	}
 }

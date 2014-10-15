@@ -1,113 +1,43 @@
 package esgi.priva2peer.chat;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.util.Random;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
 
-public class Server extends Thread
+public class Server implements Runnable
 {
-	private DatagramSocket serverSocket;
-	private byte[] receiveData;
-	private DatagramPacket receivePacket;
-	private String sentence;
-	private String servPort;
-	private static boolean packetStatus;
-	private String temp;
 
 	@Override
 	public void run()
 	{
 		try
 		{
-
-			servPort = "Server";
-
-			int port = Integer.parseInt(servPort);
-			serverSocket = new DatagramSocket(port);
-			receiveData = new byte[1024];
-
+			ServerSocket server = new ServerSocket(6991);
+			System.out.println("Start");
 			while (true)
 			{
-
-				Thread.sleep(5 * 1000);
-
-				receivePacket = new DatagramPacket(receiveData, receiveData.length);
-				serverSocket.receive(receivePacket);
-				temp = new String(receivePacket.getData());
-
-				if (temp.equals("$")) // if our packet has only an "$" in it,
-										// that is the other client letting us
-										// know it did not receive our previous
-										// packet and to resend
+				Socket socket = server.accept();
+				System.out.println(socket.getInetAddress() + " " + socket.getPort());
+				Scanner sc = new Scanner(System.in);
+				String st = new String();
+				while ((st = sc.nextLine()).trim().length() > 0)
 				{
-
-					temp = "";
-					Client.setShould_I_Re_Send(true);
+					socket.getOutputStream().write(st.getBytes());
 				}
-
-				else if (!temp.equals("$")) // the packet doesn't have an $
-											// meaning it is a regular packet
-											// from le client
-				{
-					Client.setShould_I_Re_Send(false);
-					int rNum = theLossOfPacketsIsReal();
-					if (rNum == 1 || rNum == 2)
-					{
-						// the incoming packet has been lost!!!
-						// i must tell my client that i did not receive a packet
-						// from the other peers client
-
-						System.out.println("FROM USER2: packet was lost");
-						temp = "";
-						Client.setDid_I_Receive_The_Packet(false); // tell the
-																	// my client
-																	// that no
-																	// you did
-																	// not
-																	// receive
-																	// the
-																	// packet
-
-					}
-					else
-					{
-						Client.setDid_I_Receive_The_Packet(true); // tell my
-																	// client
-																	// that i
-																	// received
-																	// the
-																	// packet
-
-						sentence = temp;
-
-						System.out.println("FROM USER2: " + sentence);
-					}
-				}
-
+				sc.close();
+				socket.close();
 			}
 		}
 		catch (Exception e)
 		{
-			System.out.println("There was an error with the Server");
+			e.printStackTrace();
 		}
-	}
-
-	public int theLossOfPacketsIsReal() // chooses a random number between 1-10
-	{
-		Random randoom = new Random();
-		int num = randoom.nextInt(10) + 1;
-		return num;
 
 	}
 
-	public static boolean isPacketLost()
+	public static void main(String[] args)
 	{
-		return packetStatus;
-	}
-
-	public static void setPacketStatus(boolean s)
-	{
-		packetStatus = s;
+		new Thread(new Server()).start();
 	}
 
 }

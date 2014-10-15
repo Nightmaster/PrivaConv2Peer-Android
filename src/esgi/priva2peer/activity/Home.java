@@ -28,6 +28,7 @@ import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
 import esgi.priva2peer.communication.parser.ConnectionJsonParser;
 import esgi.priva2peer.communication.parser.JSONParser;
+import esgi.priva2peer.communication.parser.PrivateKeyJsonParser;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -198,6 +199,7 @@ public class Home extends Activity
 					{
 
 						Intent list_f_intent = new Intent(getApplicationContext(), MainActivity.class);
+						// getPrivateKey(editTextUserName.getText().toString());
 						list_f_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(list_f_intent);
 						dialog.dismiss();
@@ -205,7 +207,6 @@ public class Home extends Activity
 					else
 					{
 						Toast.makeText(getApplicationContext(), "Login ou mot de passe non valide", Toast.LENGTH_LONG).show();
-
 					}
 
 				}
@@ -213,11 +214,36 @@ public class Home extends Activity
 				{
 					e.printStackTrace();
 				}
-
 			}
 		});
-
 		dialog.show();
+	}
+
+	public void getPrivateKey(String username)
+	{
+		HttpClient Client = new DefaultHttpClient();
+		String URL = Constants.SRV_URL + Constants.SRV_API + "getPrivateKey/" + username;
+
+		try
+		{
+
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+			}
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+			PrivateKeyJsonParser stAlJson = JSONParser.getPrivateKeyParser(SetServerString);
+			if (!stAlJson.isError())
+			{
+				String[] parts = SetServerString.split("\"");
+				// Log.d("PrivK", parts[5]); // clef public de l'ami
+			}
+		}
+		catch (Exception ex)
+		{}
 	}
 
 	@Override

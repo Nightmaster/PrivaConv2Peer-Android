@@ -1,20 +1,21 @@
 package esgi.priva2peer.communication.parser;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.UnsupportedEncodingException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import esgi.priva2peer.communication.parser.subclasses.IpAndPort;
 
 public class ClientIpJsonParser
 {
 	private String displayMessage = null;
 	private boolean error;
 	private int httpCode = 200;
-	private InetAddress ipAdress = null;
+	private IpAndPort ipAndPort = null;
 
 	/**
-	 * This class is made to parse the JSON returned by the server's web service when a user IP demand is done
-	 *
+	 * This class is made to parse the JSON returned by the server's web service
+	 * when a user IP demand is done
+	 * 
 	 * @param json {JSONObject}: the JSON returned by the server's web service
 	 * @throws JSONException Can throw exceptions because of illegal arguments
 	 **/
@@ -26,19 +27,20 @@ public class ClientIpJsonParser
 			this.displayMessage = json.getString("displayMessage");
 			this.httpCode = json.getInt("httpErrorCode");
 		}
-		try
-		{
-			this.ipAdress = InetAddress.getByName(json.getString("ip"));
-		}
-		catch (UnknownHostException e)
-		{
-			e.printStackTrace();
-		}
+		else
+			this.ipAndPort = new IpAndPort(json.getJSONObject("infos"));
 	}
 
 	public String getDisplayMessage()
 	{
-		return this.displayMessage;
+		try
+		{
+			return new String(this.displayMessage.getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return this.displayMessage;
+		}
 	}
 
 	public int getHttpCode()
@@ -46,9 +48,9 @@ public class ClientIpJsonParser
 		return this.httpCode;
 	}
 
-	public InetAddress getIpAdress()
+	public IpAndPort getIpAndPort()
 	{
-		return this.ipAdress;
+		return this.ipAndPort;
 	}
 
 	public boolean isError()

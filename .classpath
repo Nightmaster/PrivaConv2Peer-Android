@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/weupnp"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Unlucky luke/Desktop/Projet Annuel Fonctionnelle/adt-bundle-windows-x86-20140702/sdk/tools/support/annotations.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Unlucky luke/workspace/gateWay.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

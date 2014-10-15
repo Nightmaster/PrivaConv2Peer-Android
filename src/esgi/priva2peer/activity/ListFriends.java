@@ -85,9 +85,10 @@ public class ListFriends extends Activity
 				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
 			}
 			String SetServerString = "";
+
 			SetServerString = Client.execute(httpget, responseHandler);
+			Log.d("sdfv", SetServerString);
 			StayAliveJsonParser stAlJson = JSONParser.getStayAliveParser(SetServerString);
-			System.out.println(SetServerString);
 			Friend[] fl = stAlJson.getFriendList();
 			Log.d("fds", "longueur" + fl.length);
 			final String[] str = new String[fl.length];

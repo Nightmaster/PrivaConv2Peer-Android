@@ -122,9 +122,7 @@ public class AddFriend extends Activity
 							@Override
 							public void onItemClick(AdapterView<?> parent, final View view, int position, long id)
 							{
-								Log.d("jhikj", us[position].getLogin());
 								AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-
 								alertDialogBuilder.setTitle("Demande d'invitation");
 								final String userSelected = us[position].getLogin();
 

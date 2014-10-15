@@ -20,7 +20,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -30,9 +29,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import esgi.priva2peer.R;
 import esgi.priva2peer.UserSessionManager;
+import esgi.priva2peer.communication.parser.ClientIpJsonParser;
+import esgi.priva2peer.communication.parser.JSONParser;
+import esgi.priva2peer.communication.parser.PublicKeyJsonParser;
 import esgi.priva2peer.data.Constants;
 
 /**
@@ -41,6 +42,12 @@ import esgi.priva2peer.data.Constants;
 @SuppressLint("SimpleDateFormat")
 public class ChatActivity extends Activity
 {
+
+	public static String ADRESS_TO_CONNECT = "82.236.84.61";
+	public static int SAMPLE_PORT = 6991;
+
+	private static short WAIT_TIME = 120;
+
 	UserSessionManager session;
 
 	private LinearLayout mMainLayout;
@@ -55,11 +62,20 @@ public class ChatActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
 
+		Log.d("amis", "onCreate");
 		Map<String, String> talk = new HashMap<String, String>();
 
 		mMainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		mMessageField = (EditText) findViewById(R.id.message_field);
 		mMessage_prompt = (TextView) findViewById(R.id.message_prompt);
+
+		// mMessages = savedInstanceState.getStringArrayList("messages");
+		// // parcourir avec une boucle
+		// for (String message : mMessages)
+		// {
+		// Log.d("amis", message);
+		//
+		// }
 
 		Bundle extras = getIntent().getExtras();
 		String selected_item = extras.getString("selected_item");
@@ -67,13 +83,7 @@ public class ChatActivity extends Activity
 		{
 			mMessage_prompt.setText(selected_item + " ");
 		}
-		else
-		{
-			Toast.makeText(getApplicationContext(), "Aucun ami selectionné", Toast.LENGTH_LONG).show();
-			Intent list_f_intent = new Intent(getApplicationContext(), ListFriends.class);
-			startActivity(list_f_intent);
-		}
-		mMessage_prompt.setText(selected_item + " ");
+
 		HttpClient Client = new DefaultHttpClient();
 		String URL = Constants.SRV_URL + Constants.SRV_API + "GetCliIp/" + selected_item;
 
@@ -88,8 +98,43 @@ public class ChatActivity extends Activity
 			}
 			String SetServerString = "";
 			SetServerString = Client.execute(httpget, responseHandler);
-			String[] ip_friend_selected = SetServerString.split("\"");
-			Log.d("amis", ip_friend_selected[5] + "receiver");
+			ClientIpJsonParser stAlJson = JSONParser.getClientIpParser(SetServerString);
+			stAlJson.getIpAndPort();
+
+			String[] parts = SetServerString.split("\"");
+			Log.d("port = ", "vfdsf" + stAlJson.getIpAndPort().getPort()); // IP
+			Log.d("ip = ", parts[7]); // IP
+			ADRESS_TO_CONNECT = parts[7];
+
+		}
+		catch (Exception ex)
+		{}
+		getPublickey(selected_item);
+
+	}
+
+	public void getPublickey(String username)
+	{
+		HttpClient Client = new DefaultHttpClient();
+		String URL = Constants.SRV_URL + Constants.SRV_API + "getPubKey/" + username;
+
+		try
+		{
+
+			HttpGet httpget = new HttpGet(URL);
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			if (PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", "defaultStringIfNothingFound") != "IfNothingFound")
+			{
+				httpget.setHeader("Cookie", PreferenceManager.getDefaultSharedPreferences(context).getString("MYLABEL", ""));
+			}
+			String SetServerString = "";
+			SetServerString = Client.execute(httpget, responseHandler);
+			PublicKeyJsonParser stAlJson = JSONParser.getPublicKeyParser(SetServerString);
+			if (!stAlJson.isError())
+			{
+				String[] parts = SetServerString.split("\"");
+				Log.d("PubK", parts[5]); // clef public de l'ami
+			}
 
 		}
 		catch (Exception ex)
@@ -139,6 +184,8 @@ public class ChatActivity extends Activity
 		super.onSaveInstanceState(outState);
 		Log.d("amis", "onSaveInstanceState");
 		outState.putStringArrayList("messages", mMessages);
+		outState.putStringArrayList("s", mMessages);
+
 	}
 
 	protected void onPause(Bundle outState)
@@ -151,11 +198,11 @@ public class ChatActivity extends Activity
 
 	protected void onStart(Bundle savedInstanceState)
 	{
+		Log.d("amis", "onStart");
 		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
 		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
 		int ip = wifiInfo.getIpAddress();
 		Log.d("tag", " /" + ip + " /");
-
 	}
 
 	protected void onResume(Bundle savedInstanceState)
@@ -163,14 +210,13 @@ public class ChatActivity extends Activity
 		super.onResume();
 		mMessages = savedInstanceState.getStringArrayList("messages");
 		Log.d("amis", "onResume");
-
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	protected void onRestoreInstanceState(Bundle outState)
 	{
-		super.onRestoreInstanceState(savedInstanceState);
-		mMessages = savedInstanceState.getStringArrayList("messages");
+		super.onRestoreInstanceState(outState);
+		mMessages = outState.getStringArrayList("messages");
 		session = new UserSessionManager(getApplicationContext());
 		HashMap<String, String> user = session.getUserDetails();
 		String name = user.get(UserSessionManager.KEY_NAME);
@@ -203,6 +249,7 @@ public class ChatActivity extends Activity
 			addMessage(name + " (" + s + ")" + " : " + message);
 			mMessages.add(name + " (" + s + ")" + " : " + message);
 		}
+
 	}
 
 	private void addMessage(String message)
